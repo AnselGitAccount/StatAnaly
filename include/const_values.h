@@ -1,0 +1,10 @@
+#ifndef CONST_VALUES_H_
+#define CONST_VALUES_H_
+
+
+#ifndef SACV_LOG_SQRT_2PI
+#define SACV_LOG_SQRT_2PI 0.91893853320467266954
+#endif
+
+
+#endif  // CONST_VALUES_H_
