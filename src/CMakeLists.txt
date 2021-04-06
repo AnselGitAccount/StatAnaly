@@ -9,6 +9,8 @@
 set(StatAnaly_SRC
     density/disChiSq.cpp
     density/disNormal.cpp
+    adjacency.h
+    graph.h
     )
 
 # Form the full path to the source files...

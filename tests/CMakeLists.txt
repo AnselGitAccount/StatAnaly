@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(StatAnaly_TEST_SRC
     unit_test/tst_disChiSq.cpp
     unit_test/tst_disNormal.cpp
+    unit_test/tst_adjacency_matrix.cpp
+    unit_test/tst_graph.cpp
 )
 
 set(StatAnaly_TEST_HEADER
