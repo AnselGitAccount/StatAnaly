@@ -4,6 +4,7 @@
 #include <array>
 #include <string>
 #include <vector>
+#include <numeric>
 
 namespace statanaly {
 
@@ -45,92 +46,57 @@ public:
 /* Adjacency Matrix */
 // Diagonal terms are deafult to zero.
 
-template<class SCALAR>
+template<class SCALAR = int32_t>
 class Adjmat {
-    using S = std::size_t;
-    S length = 0;
+    std::vector<std::vector<SCALAR>> d;
 
 public:
-    SCALAR** data = nullptr;
-    
     Adjmat() = default;
-    Adjmat(S len_) {allocate(len_);}
-    ~Adjmat() {deallocate();}
-
-    // Copy operations (aka shallow-copy) are not allowed.
-    // because when other goes out of scope, the heap memory will be destroyed.
-    Adjmat(const Adjmat& other) = delete;
-    Adjmat& operator = (const Adjmat& other) = delete;
-
-    // Move operations reassign the ownership of the data.
-    Adjmat(Adjmat&& other) {
-        resize(other.len());
-        data = std::move(other.data);
-        
-        other.data = nullptr;
-        other.resize();
-    };
-    Adjmat& operator = (Adjmat&& other) {
-        resize(other.len());
-        data = std::move(other.data);
-        
-        other.data = nullptr;
-        other.resize();
-        return *this;
-    };
-
-    // Cloning -- Deep-copy while retaining original data.
-    void clone(const Adjmat& other) {
-        if (length != other.len()) 
-            allocate(other.len());
-        
-        deepcopy(other.data);
+    
+    Adjmat(std::size_t n) {
+        d.resize(n);
+        for(auto& row : d) {
+            row.resize(n);
+        }
     }
 
-    void allocate(const S len) {
-        if (length>0 || data!=nullptr) 
-            deallocate();
+    inline       std::vector<SCALAR>& operator[] (std::size_t idx)       { return d[idx]; }
+    inline const std::vector<SCALAR>& operator[] (std::size_t idx) const { return d[idx]; }
 
-        // allocate heap space.
-        length = len;
-        data = new SCALAR* [length];
-        for (S i=0; i<length; i++)
-            data[i] = new SCALAR [length] {};
-    }
-
-    void deallocate() {
-        if (length==0 || data==nullptr) 
-            return;
-
-        // deallocate heap space.
-        for (S i=0; i<length; i++) 
-            delete[] data[i];
-        delete[] data;
-        length = 0;
-    }
-
-    void deepcopy(const SCALAR* const * const other) {
-        for (S i=0; i<length; i++) 
-            memcpy(data[i], other[i], sizeof(SCALAR)*length);
-    }
-
-    inline       SCALAR* operator[] (S idx)       { return data[idx]; }
-    inline const SCALAR* operator[] (S idx) const { return data[idx]; }
-
-    const S len() const { return length; }
-    void resize(const S n=0) { length=n; }
+    constexpr const std::size_t len() const { return d.size(); }
+    constexpr const auto& data() const { return d; }
+    constexpr       auto& data()       { return d; }
 };
 
+template<class S>
+inline bool operator == (const Adjmat<S>& a, const Adjmat<S>& b) {
+    return a.data() == b.data();
+};
+
+template<class S>
+Adjmat<double> normalizeRow(Adjmat<S>& mat) {
+    Adjmat<double> norm;
+    for(const auto& row : mat.data()) {
+        std::vector<double> temp(row.begin(), row.end());
+        double rowsum = std::reduce(temp.begin(), temp.end());
+        if (rowsum!=0)
+            std::for_each(temp.begin(), temp.end(), [rowsum](double& e){e/=rowsum;});
+
+        norm.data().emplace_back( temp.begin(), temp.end() );
+    }
+    return norm;
+};
 
 /* Convert ASCII Text to an Adjacency matrix for 
-   Undirected graph */
+   Undirected graph.
+   When the last or first row is zero, use "len" to enfore dimension.*/
 // "AB1,AC1,CD1" is mapped to 
 // 0 1 1 0 
 // 1 0 0 0 
 // 1 0 0 1 
 // 0 0 1 0 
 template<class T>
-Adjmat<T> convert2Adjmat(std::string str) {
+Adjmat<T> convert2Adjmat(std::string str, std::size_t len=0) {
     // trim white space
     str.erase( std::remove(str.begin(), str.end(), ' '), str.end() );
 
@@ -148,10 +114,11 @@ Adjmat<T> convert2Adjmat(std::string str) {
     for (const std::string& s : vs) {
         // Assume node labels are single character long.
         min = min < int(s[0]) ? min : int(s[0]);
+        min = min < int(s[1]) ? min : int(s[1]);
+        max = int(s[0]) < max ? max : int(s[0]);
         max = int(s[1]) < max ? max : int(s[1]);
     }
-    const int n_nodes = max - min + 1;
-
+    int n_nodes = max - min + 1;
 
     // Build Adjacency matrix
     Adjmat<T> AdjMat(n_nodes);
@@ -179,7 +146,7 @@ Adjmat<T> convert2Adjmat(std::string str) {
 // 0 0 0 1 
 // 0 0 0 0 
 template<class T>
-Adjmat<T> convert2DirectedAdjmat(std::string str) {
+Adjmat<T> convert2DirectedAdjmat(std::string str, std::size_t len=0) {
     // trim white space
     str.erase( std::remove(str.begin(), str.end(), ' '), str.end() );
 
@@ -197,9 +164,11 @@ Adjmat<T> convert2DirectedAdjmat(std::string str) {
     for (const std::string& s : vs) {
         // Assume node labels are single character long.
         min = min < int(s[0]) ? min : int(s[0]);
+        min = min < int(s[1]) ? min : int(s[1]);
+        max = int(s[0]) < max ? max : int(s[0]);
         max = int(s[1]) < max ? max : int(s[1]);
     }
-    const int n_nodes = max - min + 1;
+    int n_nodes = max - min + 1;
 
     // Build Adjacency matrix
     Adjmat<T> AdjMat(n_nodes);

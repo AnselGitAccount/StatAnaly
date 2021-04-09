@@ -7,38 +7,27 @@
 
 namespace statanaly {
 
-template<class DERI>
+template<class DERI, class S>
 class Graph {
+protected:
+    // Default to using Adjacentcy matrix.
+    Adjmat<S> mat;
+
 public:
     // Expose interface functions here.
+    constexpr const Adjmat<S>& adjmat() const {return mat;}
+    constexpr       Adjmat<S>& adjmat()       {return mat;}
+
 };
 
 /* Directed Weighted graph */
 
 template<class S>
-class DWGraph : public Graph<DWGraph<S>> {
-public:
-    // Default to using Adjacentcy matrix.
-    Adjmat<S> adjmat;
-
-    // Constructor
-    DWGraph (const Adjmat<S>& mat) { 
-        adjmat.clone(mat);
+class DWGraph : public Graph<DWGraph<S>, S> {
+public:    
+    DWGraph (const Adjmat<S>& m) {
+        this->mat = m;
     }
-
-    // Copy operations -- clone the adjmat.
-    DWGraph (const DWGraph<S>& other) {
-        this->operator=(other);
-    }
-    DWGraph& operator = (const DWGraph<S>& other) {
-        adjmat.clone(other.adjmat);
-        return *this;
-    }
-
-    // Move operations -- reassign the ownership of the adjmat.
-    DWGraph (DWGraph<S>&& other) = default;
-    DWGraph& operator = (DWGraph<S>&& other) = default;
-
 };
 
 
@@ -48,32 +37,23 @@ public:
  */
 
 template<class S>
-class DUGraph : public Graph<DUGraph<S>> {
+class DUGraph : public Graph<DUGraph<S>, S> {
 public:
-    // Default to using Adjacentcy matrix.
-    Adjmat<S> adjmat;
-
-    // Constructor
-    DUGraph (const Adjmat<S>& mat) {
-        adjmat.clone(mat);
+    DUGraph (const Adjmat<S>& m) {
+        this->mat = m;
     }
-
-
-    // Copy operations -- clone the adjmat.
-    DUGraph (const DUGraph<S>& other) {
-        this->operator=(other);
-    };
-    DUGraph& operator = (const DUGraph<S>& other) {
-        adjmat.clone(other.adjmat);
-        return *this;
-    };
-
-    // Move operations.
-    DUGraph (DUGraph&& other) = default;
-    DUGraph& operator = (DUGraph&& other) = default;
-
 };
 
+
+template<class S>
+inline bool operator == (const DWGraph<S>& a, const DWGraph<S>& b) {
+    return a.adjmat() == b.adjmat();
+};
+
+template<class S>
+inline bool operator == (const DUGraph<S>& a, const DUGraph<S>& b) {
+    return a.adjmat() == b.adjmat();
+};
 
 }  // namespace
 
