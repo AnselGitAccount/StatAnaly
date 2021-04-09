@@ -8,6 +8,7 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_disNormal.cpp
     unit_test/tst_adjacency_matrix.cpp
     unit_test/tst_graph.cpp
+    feature_test/tst_markdov_chain.cpp
 )
 
 set(StatAnaly_TEST_HEADER

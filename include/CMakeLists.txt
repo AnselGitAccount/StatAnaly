@@ -13,6 +13,7 @@ set(StatAnaly_INC
     const_values.h
     rand_num_gen.h
     statanaly.h
+    markov_chain.h
     )
 
 # Form the full path to the source files...

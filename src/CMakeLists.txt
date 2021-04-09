@@ -11,6 +11,7 @@ set(StatAnaly_SRC
     density/disNormal.cpp
     adjacency.h
     graph.h
+    hasher.h
     )
 
 # Form the full path to the source files...
