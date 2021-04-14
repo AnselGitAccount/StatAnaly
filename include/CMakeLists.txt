@@ -10,6 +10,7 @@ set(StatAnaly_INC
     density/disChiSq.h
     density/disNormal.h
     density/probDensFunc.h
+    density/disUniform.h
     const_values.h
     rand_num_gen.h
     statanaly.h
