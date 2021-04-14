@@ -7,7 +7,7 @@
 namespace statanaly {
 
 template<class T> 
-requires std::is_floating_point<T>::value
+requires std::is_arithmetic_v<T>
 class disNormal : probDensFunc {
 private:
     double mu;      // parameter -- mean
@@ -31,6 +31,10 @@ public:
     }
 
     double mean() override {
+        return mu;
+    }
+
+    double stddev() override {
         return mu;
     }
 

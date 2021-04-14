@@ -34,6 +34,10 @@ public:
         return k;
     }
 
+    double stddev() override {
+        return sqrt(k*2.);
+    }
+
     double variance() override {
         return k*2.;
     }

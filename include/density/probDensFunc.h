@@ -10,6 +10,7 @@ public:
     virtual double pdf(const double)    = 0;
     virtual double cdf(const double)    = 0;
     virtual double mean()               = 0;
+    virtual double stddev()             = 0;
     virtual double variance()           = 0;
     virtual double skewness()           = 0;
 };
