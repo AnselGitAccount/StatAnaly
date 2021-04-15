@@ -20,52 +20,11 @@
 
 namespace statanaly {
 
-/* Pseudo RNG -- Mersenne Twister
- * Seed-able and properly seeded,
- * Portable,
- * Platform agnostic */
-class rng {
-    std::random_device rd;  // use "default" token because it is portable.
-    std::mt19937 eng;   // typedef to std::mersenne_twister_engine
-
-public:
-    rng() {
-        setProperSeed();
-    }
-    rng(std::size_t x) {
-        setSeed(x);
-    }
-
-    // Disable copy operations -- std::random_device prohibits copying.
-    rng(const rng&) = delete;
-    rng& operator = (const rng&) = delete;
-
-    // Disable move operations. 
-    rng(rng&&) = delete;
-    rng& operator = (rng&&) = delete;
-
-
-    void setProperSeed() {
-        // Seeding Mersenne Twister with enough entropy for its state-size, i.e., 624x4 bytes
-        std::random_device::result_type rnd_nums[std::mt19937::state_size];
-        std::generate(std::begin(rnd_nums), std::end(rnd_nums), std::ref(rd));
-        std::seed_seq seeds(std::begin(rnd_nums), std::end(rnd_nums));
-        
-        eng.seed(seeds);
-    };
-
-    void setSeed(std::size_t x) {
-        // Simple seeding, for RN reproducibility.
-        std::seed_seq seeds{x};
-        eng.seed(seeds);
-    }
-    
-};
-
-
-/* Pseudo RNG that is non-blocking. 
- * For Linux kernels only. */
-class rng_linux {
+/* Pseudo RNG -- /dev/urandom
+ * More direct than libstd.
+ * Non-blocking.
+ * For Unix-like os only. */
+class rng_unix {
     int fd = 0;
 
     void openUrandom() {
@@ -74,22 +33,22 @@ class rng_linux {
     }
 
 public:
-    rng_linux() {
+    rng_unix() {
         openUrandom();
     }
-    ~rng_linux() {
+    ~rng_unix() {
         if (fd>=0) close(fd);
     }
 
     // Disable copy operations.
-    rng_linux(const rng_linux&) = delete;
-    rng_linux& operator = (const rng_linux&) = delete;
+    rng_unix(const rng_unix&) = delete;
+    rng_unix& operator = (const rng_unix&) = delete;
     
     // Move operations only
-    rng_linux(rng_linux&& other) {
+    rng_unix(rng_unix&& other) {
         fd = std::exchange(other.fd, -1);
     }
-    rng_linux& operator = (rng_linux&& other) {
+    rng_unix& operator = (rng_unix&& other) {
         fd = std::exchange(other.fd, -1);
         return *this;
     }
@@ -99,25 +58,33 @@ public:
     }
 
     template<class T>
-    T getRN() {
+    auto getRN() {
         T buf;
         read(fd, &buf, sizeof(T));
         return buf;
     }
 
     template<class T>
-    std::unique_ptr<T[]> getRN(uint num) {
+    auto getRN(uint num) {
         std::unique_ptr<T[]> buf = std::make_unique<T[]>(num);
         read(fd, buf.get(), sizeof(T)*num);
         return buf;
     }
 };
 
+
+// Seeding Mersenne Twister with enough entropy for its state-size, i.e., 624x4 bytes
+void setProperSeed(std::mt19937& eng) {
+    // use "default" token because it is portable.
+    std::random_device rd;
+    std::random_device::result_type rnd_nums[std::mt19937::state_size];
+    std::generate(std::begin(rnd_nums), std::end(rnd_nums), std::ref(rd));
+    std::seed_seq seeds(std::begin(rnd_nums), std::end(rnd_nums));
+    
+    eng.seed(seeds);
+};
+
+
 } // namespace 
-
-
-/* TODO:
- *  Test the good-ness of rng and rng_linux.
- */
 
 #endif
