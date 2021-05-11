@@ -9,6 +9,8 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_adjacency_matrix.cpp
     unit_test/tst_graph.cpp
     unit_test/tst_disUniform.cpp
+    unit_test/tst_disBase.cpp
+    unit_test/tst_disMixture.cpp
     feature_test/tst_markdov_chain.cpp
     feature_test/tst_rng_unix.cpp
 )

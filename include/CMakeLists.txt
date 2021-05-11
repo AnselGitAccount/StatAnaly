@@ -11,6 +11,7 @@ set(StatAnaly_INC
     density/disNormal.h
     density/probDensFunc.h
     density/disUniform.h
+    density/disMixture.h
     const_values.h
     rand_num_gen.h
     statanaly.h
