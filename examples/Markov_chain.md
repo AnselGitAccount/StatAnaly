@@ -25,9 +25,9 @@ Unsurprisingly the gambler, as the better player, is more likely to win the enti
 
 ```cpp
 /* Gambler's ruin */
-// The '1' in diagnal is optional.
-// std::string graphStr {"BA1,BC2,CB1,CD2"};
 
+// Construct a transition matrix.
+// (Note: The '1' in diagonal is optional.)
 std::string graphStr {"AA1,BA1,BC2,CB1,CD2,DD1"};
 Adjmat<int> myAdjmat = convert2DirectedAdjmat<int>(graphStr);
 
