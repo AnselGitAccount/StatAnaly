@@ -11,6 +11,7 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_disUniform.cpp
     unit_test/tst_disBase.cpp
     unit_test/tst_disMixture.cpp
+    unit_test/tst_dContainer.cpp
     feature_test/tst_markdov_chain.cpp
     feature_test/tst_rng_unix.cpp
 )

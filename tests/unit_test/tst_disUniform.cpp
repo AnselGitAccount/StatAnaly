@@ -32,5 +32,21 @@ TEST( Uniform_Distribution, cdf ) {
     EXPECT_DOUBLE_EQ( 1    , distr.cdf(6.12) );
 }
 
+TEST( Std_Uniform_Distribution, hash ) {
+    disStdUniform d1{};
+    disStdUniform d2{};
+
+    EXPECT_TRUE(d1.hash() == d2.hash());
+};
+
+TEST( Uniform_Distribution, hash ) {
+    disUniform d1(3, 8);
+    disUniform d2(3, 8);
+    disUniform d3(5, 8);
+
+    EXPECT_TRUE(d1.hash() == d2.hash());
+    EXPECT_TRUE(d1.hash() != d3.hash());
+};
+
 
 }

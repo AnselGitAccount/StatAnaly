@@ -8,19 +8,10 @@ namespace statanaly {
 
 template<class T, class F>
 bool tst_isClone(const T* d1, const F* d2, double x=0) {
-    // d1 and d2 have to occupy different memory.
+    // d1 and d2 MUST occupy different memory space.
     if (d1 == d2) return false;
-
-    bool isSame = true;
     
-    isSame &= (d1->pdf(x) == d2->pdf(x));
-    isSame &= (d1->cdf(x) == d2->cdf(x));
-    isSame &= (d1->mean() == d2->mean());
-    isSame &= (d1->stddev() == d2->stddev());
-    isSame &= (d1->variance() == d2->variance());
-    isSame &= (d1->skewness() == d2->skewness());
-
-    return isSame;
+    return d1->hash() == d2->hash();
 }
 
 template<class T, class F>

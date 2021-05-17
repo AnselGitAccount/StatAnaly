@@ -2,7 +2,8 @@
 #define STATANALY_PROBDENSFUNC_H_
 
 #include "specialFunc.h"
-
+#include "../../src/hasher.h"
+#include <memory>
 
 namespace statanaly {
 
@@ -27,11 +28,21 @@ public:
     virtual double stddev() const               = 0;
     virtual double variance() const             = 0;
     virtual double skewness() const             = 0;
-    
+
+    virtual std::size_t hash() const noexcept {
+        std::size_t seed = 0;
+        combine_hash(seed, id);
+        return seed;
+    }
     
     virtual std::unique_ptr<probDensFunc> cloneUnique() const = 0;
     virtual probDensFunc* clone() const = 0;    // Return type can be Covariant.
 
+    // Virtual friend idiom -- The friendship will get pass down to derived classes.
+    friend std::ostream& operator << (std::ostream&, const probDensFunc&);
+    virtual void print(std::ostream&) const = 0;
+
+    virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::BASE_DISTR;
 
 protected:
@@ -40,6 +51,10 @@ protected:
     probDensFunc(const probDensFunc&) = default;
     probDensFunc(probDensFunc&&) = default;
 };
+
+
+// Human friendly text.
+std::ostream& operator << (std::ostream& output, const probDensFunc& distr);
 
 }
 

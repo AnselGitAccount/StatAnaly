@@ -48,6 +48,14 @@ public:
         return 0;
     }
 
+    inline std::size_t hash() const noexcept {
+        std::size_t seed = 0;
+        combine_hash(seed, char(id));
+        combine_hash(seed, mu);
+        combine_hash(seed, sig);
+        return seed;
+    }
+
     std::unique_ptr<probDensFunc> cloneUnique() const override {
         return std::make_unique<disNormal>(static_cast<disNormal const&>(*this));
     };
@@ -56,10 +64,23 @@ public:
         return new disNormal(*this);
     }
 
+    void print(std::ostream& output) const override {
+        output << "Normal distribution -- mu = " << mu << "  sig = " << sig;
+    }
+
+    virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::NORMAL_DISTR;
 };
-
 } // namespace statanaly
+
+
+template<>
+class std::hash<statanaly::disNormal> {
+public:
+    std::size_t operator() (const statanaly::disNormal& d) const {
+        return d.hash();
+    }
+};
 
 /* TODO:
  * - Implement disNormal::cdf().

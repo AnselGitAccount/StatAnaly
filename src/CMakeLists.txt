@@ -9,6 +9,8 @@
 set(StatAnaly_SRC
     density/disChiSq.cpp
     density/disNormal.cpp
+    density/probDensFunc.cpp
+    dContainer.cpp
     adjacency.h
     graph.h
     hasher.h

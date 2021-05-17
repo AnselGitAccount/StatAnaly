@@ -38,6 +38,12 @@ public:
         return 0;
     }
 
+    inline std::size_t hash() const noexcept {
+        std::size_t seed = 0;
+        combine_hash(seed, char(id));
+        return seed;
+    }
+
     std::unique_ptr<probDensFunc> cloneUnique() const override {
         return std::make_unique<disStdUniform>(static_cast<disStdUniform const&>(*this));
     };
@@ -46,6 +52,11 @@ public:
         return new disStdUniform(*this);
     }
 
+    void print(std::ostream& output) const override {
+        output << "Std Uniform distribution -- a = 0  b = 1";
+    }
+
+    virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::STD_UNIFORM_DISTR;
 };
 
@@ -94,6 +105,14 @@ public:
         return 0;
     }
 
+    inline std::size_t hash() const noexcept {
+        std::size_t seed = 0;
+        combine_hash(seed, char(id));
+        combine_hash(seed, a);
+        combine_hash(seed, b);
+        return seed;
+    }
+
     std::unique_ptr<probDensFunc> cloneUnique() const override {
         return std::make_unique<disUniform>(static_cast<disUniform const&>(*this));
     };
@@ -102,11 +121,31 @@ public:
         return new disUniform(*this);
     }
 
+    void print(std::ostream& output) const override {
+        output << "Uniform distribution -- a = " << a << "  b = " << b;
+    }
+
+    virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::UNIFORM_DISTR;
 };
+}   // namespace statanaly
 
 
-}
+template<>
+class std::hash<statanaly::disStdUniform> {
+public:
+    std::size_t operator() (const statanaly::disStdUniform& d) const {
+        return d.hash();
+    }
+};
+
+template<>
+class std::hash<statanaly::disUniform> {
+public:
+    std::size_t operator() (const statanaly::disUniform& d) const {
+        return d.hash();
+    }
+};
 
 
 #endif 

@@ -46,6 +46,13 @@ public:
         return sqrt(8./k);
     }
 
+    inline std::size_t hash() const noexcept {
+        std::size_t seed = 0;
+        combine_hash(seed, char(id));
+        combine_hash(seed, k);
+        return seed;
+    }
+
     std::unique_ptr<probDensFunc> cloneUnique() const override {
         return std::make_unique<disChiSq>(static_cast<disChiSq const&>(*this));
     };
@@ -54,10 +61,26 @@ public:
         return new disChiSq(*this);
     }
 
+    void print(std::ostream& output) const override {
+        output << "Chi Square distribution -- k = " << k;
+    }
+
+    virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::CHISQ_DISTR;
 };
 
-}
+}   // namespace statanaly
+
+
+template<>
+class std::hash<statanaly::disChiSq> {
+public:
+    std::size_t operator() (const statanaly::disChiSq& d) const {
+        return d.hash();
+    }
+};
+
+
 /* TODO:
  * - Implement disChiSq::compute_cdf().
  */

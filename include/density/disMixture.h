@@ -2,7 +2,7 @@
 #define STATANALY_DIS_MIXTURE_H_
 
 #include "probDensFunc.h"
-
+#include "../dContainer.h"
 #include <vector>
 #include <map>
 
@@ -10,46 +10,39 @@ namespace statanaly {
 
 class disMixture : public probDensFunc {
     using weightType = double;
-    std::vector<weightType> weights;
     
-    // Stores the list of named distribution functions 
-    // that made up the mixture distribution.
-    std::vector<std::pair<std::unique_ptr<probDensFunc>, weightType>> ingreds;
+    // Use a container object.
+    dCtr ctr;
 
 public:
+
+
+
     disMixture() = default;
-    
+
     // Copy constructor: deep-copy, do the same as clone().
     disMixture(const disMixture& o) {
-        // clone the named distribution.
-        for (const auto& [d,w] : o.ingreds) {
-            ingreds.push_back(std::make_pair(d->cloneUnique(),w));
-        }
-        weights = o.weights;
+        // clone the container.
+        ctr = o.ctr;
     }
 
     // Copy assignment: deep-copy
     disMixture& operator = (const disMixture& o) {
-        // clone the named distribution.
-        for (const auto& [d,w] : o.ingreds) {
-            ingreds.push_back(std::make_pair(d->cloneUnique(),w));
-        }
-        weights = o.weights;
+        // clone the container
+        ctr = o.ctr;
         return *this;
     };
     
     // Move constructor
     disMixture(disMixture&& o) {
         // Move the named distribution.
-        ingreds = std::move(o.ingreds);
-        weights = std::move(o.weights);
+        ctr = std::move(o.ctr);
     }
 
     // Move assignment
     disMixture& operator = (disMixture&& o) {
         // Move the named distribution.
-        ingreds = std::move(o.ingreds);
-        weights = std::move(o.weights);
+        ctr = std::move(o.ctr);
         return *this;
     }
 
@@ -61,85 +54,22 @@ public:
         return new disMixture(*this);
     };
 
-    // disMixture makes a deep copy of the distribution functions that is passing in.
+    // Forward to container's insert.
     template<typename F, typename W>
     requires std::is_arithmetic_v<W>
-    void insert(const F* distr, W weight) {
-        // Make a deep-copy
-        ingreds.push_back(
-            std::make_pair(distr->cloneUnique(), static_cast<weightType>(weight)) );
-
-        // Rescale the weights so that they sum up to one.
-        rescale();
+    void insert(F&& distr, W weight) {
+        ctr.insert( std::forward<F>(distr), weight);
     }
 
-    template<typename F, typename W>
-    requires std::is_arithmetic_v<W>
-    void insert(const std::unique_ptr<F>& distr, W weight) {
-        ingreds.push_back( 
-            std::make_pair(distr->cloneUnique(), static_cast<weightType>(weight)) );    
-
-        rescale();
+    // Find a distribution that match distr's hash (ie, type and parameters).
+    template<typename F>
+    inline auto find(F&& distr) const {
+        return ctr.find( std::forward<F>(distr) );
     }
 
-    void rescale() {
-        weightType sum = 0;
-        for (const auto& [d,w] : ingreds) {sum += w;}
-
-        weights.resize(ingreds.size());
-        for (std::size_t i=0; i<ingreds.size(); i++) {    
-            weights[i] = (ingreds[i].second) / sum;
-        }
-    }
-
-    void clear() {
-        ingreds.clear();
-        weights.clear();
-    }
-
-    // // Map the content to a 
-    // std::vector<int> remap() {
-    //     std::vector<int> cnts(static_cast<std::size_t>(dFuncID::COUNT), 0);
-    //     for (const auto& [d,w] : ingreds) {
-    //         switch (d->id) {
-    //             case dFuncID::BASE_DISTR :
-    //                 cnts[ static_cast<std::size_t>(dFuncID::BASE_DISTR) ]++;
-    //                 break;
-    //             case dFuncID::NORMAL_DISTR :
-    //                 cnts[ static_cast<std::size_t>(dFuncID::NORMAL_DISTR) ]++;
-    //                 break;
-    //             case dFuncID::STD_UNIFORM_DISTR :
-    //                 cnts[ static_cast<std::size_t>(dFuncID::STD_UNIFORM_DISTR) ]++;
-    //                 break;
-    //             case dFuncID::UNIFORM_DISTR :
-    //                 cnts[ static_cast<std::size_t>(dFuncID::UNIFORM_DISTR) ]++;
-    //                 break;
-    //             case dFuncID::CHISQ_DISTR :
-    //                 cnts[ static_cast<std::size_t>(dFuncID::CHISQ_DISTR) ]++;
-    //                 break;
-    //             case dFuncID::MIXTURE_DISTR :
-    //                 cnts[ static_cast<std::size_t>(dFuncID::MIXTURE_DISTR) ]++;
-    //                 break;
-    //         }
-    //     }
-    //     return cnts;
-    // }
-
-    // // Encode the distribution into a string.
-    // std::string encode() {
-    //     return std::string{};
-    // }
-
-    // void print() {
-    //     auto cnts = encode();
-
-    //     // Print to screen
-    //     for (std::size_t i=0; i<cnts.size(); i++) {printf("%d ",cnts[i]);}
-    //     printf("\n");
-
-    //     // TODO: overload << operators for every distribution.
-    //     // TODO: Encode each distribution.
-    // }
+    inline const auto& get() const {return ctr.get();}
+    inline const auto end() const {return ctr.end();}
+    inline void clear() {ctr.clear();}
 
     double pdf(const double x) const override {
         double r = 0;
@@ -181,12 +111,44 @@ public:
         return 0;
     }
 
+    inline std::size_t hash() const noexcept {
+        // Mixture distribution is different when the contents are different.
+        // Insertion order of the ingredients does not matter.
+
+        std::vector<std::size_t> hashes;
+        for (const auto& [d,w] : ctr.get()) {
+            hashes.push_back(d->hash());
+        }
+        std::sort(hashes.begin(), hashes.end());
+
+        std::size_t seed = 0;
+        combine_hash(seed, char(id));
+        for (const auto h : hashes) {combine_hash(seed, h);}
+
+        return seed;
+    }
+
+    void print(std::ostream& output) const override {
+        output << "Mixture distribution : \n";
+        for (const auto& [d,ws] : ctr.get()) {
+            output << "    - " << *d << " @ weight = " << ws.second << "\n";
+        }
+    }
+
+    virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::MIXTURE_DISTR;
 };
 
-
-
-
 } // namespace 
+
+
+template<>
+class std::hash<statanaly::disMixture> {
+public:
+    std::size_t operator() (const statanaly::disMixture& d) const {
+        return d.hash();
+    }
+};
+
 
 #endif
