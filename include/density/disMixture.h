@@ -11,13 +11,9 @@ namespace statanaly {
 class disMixture : public probDensFunc {
     using weightType = double;
     
-    // Use a container object.
     dCtr ctr;
 
 public:
-
-
-
     disMixture() = default;
 
     // Copy constructor: deep-copy, do the same as clone().
@@ -72,43 +68,66 @@ public:
     inline void clear() {ctr.clear();}
 
     double pdf(const double x) const override {
-        double r = 0;
-        // for (const auto& [key, fs] : ingred) {
-        //     for (const auto& f : fs) {
-        //         r += f.pdf(x);
-        //     }
-        // }
-        return r;
+        // pdf of a mixture is the weighted sum of pdf of components.
+        double res = 0;
+        for (const auto& [d, ws] : ctr.get()) {
+            const double w = ws.second;
+            res += d->pdf(x) * w;
+        }
+        return res;
     }
 
     double cdf(const double x) const override {
-        double r = 0;
-        // for (const auto& [key, fs] : ingred) {
-        //     for (const auto& f : fs) {
-        //         r += f.cdf(x);
-        //     }
-        // }
-        return r;
+        // cdf of a mixture is the weighted sum of cdf of components.
+        double res = 0;
+        for (const auto& [d, ws] : ctr.get()) {
+            const double w = ws.second;
+            res += d->cdf(x) * w;
+        }
+        return res;
     }
 
     double mean() const override {
-        throw std::string("Need to implement");
-        return 0;
+        // mean of a mixture is the weighted sum of mean of components.
+        double res = 0;
+        for (const auto & [d, ws] : ctr.get()) {
+            const double w = ws.second;
+            res += d->mean() * w;
+        }
+        return res;
     }
 
     double stddev() const override {
-        throw std::string("Need to implement");
-        return 0;
+        double res = std::sqrt(variance());
+        return res;
     }
 
     double variance() const override {
-        throw std::string("Need to implement");
-        return 0;
+        // Law of Total Variance
+        double tmp = 0;
+        double wmu = 0;
+        for (const auto & [d, ws] : ctr.get()) {
+            const double w = ws.second;
+            const double m = d->mean();
+            wmu += m * w;
+            tmp += (d->variance() + m * m) * w;
+        }
+        return tmp - wmu * wmu;
     }
 
     double skewness() const override {
-        throw std::string("Need to implement");
-        return 0;
+        double tmp = 0;
+        for (const auto & [d, ws] : ctr.get()) {
+            const double w = ws.second;
+            const double s = d->stddev();
+            const double m = d->mean();
+            tmp += w*s*s*s*d->skewness() + 3*w*m*s*s + w*m*m*m;
+        }
+        const double s = stddev();
+        const double m = mean();
+        tmp += - 3*m*s*s - m*m*m;
+        tmp /= s*s*s;
+        return tmp;
     }
 
     inline std::size_t hash() const noexcept {

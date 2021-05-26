@@ -14,9 +14,9 @@ private:
 public:
     template<class T> 
     requires std::is_arithmetic_v<T>
-    disNormal(const T mean, const T stdDev){
+    disNormal(const T mean, const T variance){
         mu = mean;
-        sig = stdDev;
+        sig = sqrt(variance);
     }
     disNormal() = delete;
     ~disNormal() = default;
@@ -37,11 +37,11 @@ public:
     }
 
     double stddev() const override {
-        return mu;
+        return sig;
     }
 
     double variance() const override {
-        return mu*mu;
+        return sig*sig;
     }
 
     double skewness() const override {

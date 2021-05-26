@@ -11,7 +11,7 @@ auto tst_disNormal_pdf(double x, double y, int z) {
 
 TEST( Normal_Distribution_Tests, pdf ) {
     EXPECT_DOUBLE_EQ(0.10798193302637613,
-        tst_disNormal_pdf(-2., 0.5, -1));
+        tst_disNormal_pdf(-2., 0.25, -1));
 };
 
 

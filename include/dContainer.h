@@ -14,7 +14,8 @@ class dCtr {
     using weightType = double;
     
     // Stores the list of named distribution functions that are the contents.
-    // The second weight value is the weight distribution.
+    // The first weight value is the share.
+    // The second weight value is the normalized weight.
     std::unordered_map<probDensFunc*, std::pair<weightType,weightType>> ingreds;
 
 public:

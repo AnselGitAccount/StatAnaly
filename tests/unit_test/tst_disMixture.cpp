@@ -156,4 +156,102 @@ TEST( Mixture_Distribution_Tests, rescale ) {
     }
 }
 
+/* Statistical tests */
+
+std::unique_ptr<disMixture>  construct_M1() {
+    std::unique_ptr<disUniform> d1 = std::make_unique<disUniform>(0,1);
+    std::unique_ptr<disUniform> d2 = std::make_unique<disUniform>(0.5,3.5);
+    std::unique_ptr<disMixture> distr = std::make_unique<disMixture>();
+    distr->insert(*d1, 1);
+    distr->insert(*d2, 2);
+    return distr;
+}
+
+TEST( Mixture_Distribution_Tests, pdf_M1 ) {
+    auto distr = construct_M1();
+    
+    double exp_pdf = 1./3+2./3/3;
+    EXPECT_DOUBLE_EQ( exp_pdf, distr->pdf(0.7) );
+}
+
+TEST( Mixture_Distribution_Tests, cdf_M1 ) {
+    auto distr = construct_M1();
+    
+    double exp_cdf = 0.7/3+2./3*0.2/3;
+    EXPECT_DOUBLE_EQ( exp_cdf, distr->cdf(0.7) );
+}
+
+TEST( Mixture_Distribution_Tests, mean_M1 ) {
+    auto distr = construct_M1();
+
+    double exp_mean = 1./6 + 4./3;
+    EXPECT_DOUBLE_EQ( exp_mean, distr->mean() );
+}
+
+TEST( Mixture_Distribution_Tests, variance_M1 ) {
+    auto distr = construct_M1();
+
+    double exp_variance = 1./36+1./2 - (1./6+4./3)*(1./6+4./3) + (1./12+8./3);
+    EXPECT_DOUBLE_EQ( exp_variance, distr->variance() );
+}
+
+TEST( Mixture_Distribution_Tests, skewness_M1 ) {
+    auto distr = construct_M1();
+
+    double exp_skewness = 1./24 + 3 + 1./24 + 16./3;
+    exp_skewness += - 3*distr->mean()*distr->variance()
+                    - distr->mean()*distr->mean()*distr->mean();
+    exp_skewness /= distr->stddev()*distr->stddev()*distr->stddev();
+
+    // The numerical discrepancy is larger than the tolerance of EXPECT_DOUBLE_EQ.
+    EXPECT_FLOAT_EQ( exp_skewness, distr->skewness() );
+}
+
+
+std::unique_ptr<disMixture>  construct_M2() {
+    std::unique_ptr<disNormal>  d1 = std::make_unique<disNormal>(1,2);
+    std::unique_ptr<disNormal>  d2 = std::make_unique<disNormal>(2,1);
+    std::unique_ptr<disMixture> distr = std::make_unique<disMixture>();
+    distr->insert(*d1, 1);
+    distr->insert(*d2, 2);
+    return distr;
+}
+
+TEST( Mixture_Distribution_Tests, pdf_M2 ) {
+    auto distr = construct_M2();
+
+    double pdf_d1 = exp(-log(sqrt(2)) - SACV_LOG_SQRT_2PI - 0.5*(0.7*0.7/2));
+    double pdf_d2 = exp(-log(sqrt(1)) - SACV_LOG_SQRT_2PI - 0.5*(0.3*0.3));
+    double exp_pdf = pdf_d1/3 + pdf_d2*2/3;
+
+    EXPECT_FLOAT_EQ( exp_pdf, distr->pdf(1.7) );
+}
+
+TEST( Mixture_Distribution_Tests, mean_M2 ) {
+    auto distr = construct_M2();
+
+    double exp_mean = 1./3+4./3;
+    EXPECT_DOUBLE_EQ( exp_mean, distr->mean() );
+}
+
+TEST( Mixture_Distribution_Tests, variance_M2 ) {
+    auto distr = construct_M2();
+
+    double exp_variance = 2./3 + 2./3 - 5./3*5/3 + 1./3 + 8./3;
+    EXPECT_DOUBLE_EQ( exp_variance, distr->variance() );
+}
+
+TEST( Mixture_Distribution_Tests, skewness_M2 ) {
+    auto distr = construct_M2();
+
+    double exp_skewness = 2 + 4 + 17./3;
+    exp_skewness += - 3*distr->mean()*distr->variance()
+                    - distr->mean()*distr->mean()*distr->mean();
+    exp_skewness /= distr->stddev()*distr->stddev()*distr->stddev();
+
+    // The numerical discrepancy is larger than the tolerance of EXPECT_DOUBLE_EQ.
+    EXPECT_FLOAT_EQ( exp_skewness, distr->skewness() );
+}
+
+
 }
