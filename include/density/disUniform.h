@@ -73,7 +73,9 @@ public:
     disUniform(const T lower, const T upper) {
         a = lower;
         b = upper;
-        assert( a!=b );
+        if(a == b) {
+            throw std::runtime_error("Uniform distribution must have valid boundary.");
+        }
     }
     disUniform() = delete;
     ~disUniform() = default;

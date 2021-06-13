@@ -28,7 +28,7 @@ public:
     }
 
     double cdf(const double x) const override {
-        throw std::string("Need to implement");
+        throw std::runtime_error("Need to implement");
         return 0;
     }
 

@@ -12,11 +12,15 @@ set(StatAnaly_INC
     density/probDensFunc.h
     density/disUniform.h
     density/disMixture.h
+    density/disIrwinHall.h
     dContainer.h
+    dConvolution.h
     const_values.h
     rand_num_gen.h
     statanaly.h
     markov_chain.h
+    type_info.h
+    double_dispatcher.h
     )
 
 # Form the full path to the source files...

@@ -11,6 +11,8 @@ set(StatAnaly_SRC
     density/disNormal.cpp
     density/probDensFunc.cpp
     dContainer.cpp
+    dConvolution.cpp
+    type_info.cpp
     adjacency.h
     graph.h
     hasher.h
