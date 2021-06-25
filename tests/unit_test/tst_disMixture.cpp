@@ -82,11 +82,16 @@ TEST( Mixture_Distribution_Tests, hash ) {
 
     std::unique_ptr<disMixture> d1 = constructSmartMixture();
     std::unique_ptr<disMixture> d2 = constructSmartMixture();
-    EXPECT_TRUE( d1->hash() == d2->hash() );
-
     std::unique_ptr<disNormal> d3 = std::make_unique<disNormal>(2,1);
+
+    // Must have the same number of distributions.
+    EXPECT_TRUE( d1->hash() == d2->hash() );
     d2->insert(*d3, 1);
-    EXPECT_TRUE( d1->hash() != d2->hash() );
+    EXPECT_FALSE( d1->hash() == d2->hash() );
+
+    // Weights must be the same as well.
+    d1->insert(*d3, 2);
+    EXPECT_FALSE( d1->hash() == d2->hash() );
 }
 
 

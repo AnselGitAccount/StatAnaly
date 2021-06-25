@@ -131,20 +131,10 @@ public:
     }
 
     inline std::size_t hash() const noexcept {
-        // Mixture distribution is different when the contents are different.
-        // Insertion order of the ingredients does not matter.
+        // disMixture only contains a dContainer.
+        // So the hash should be that of a dContainer.
 
-        std::vector<std::size_t> hashes;
-        for (const auto& [d,w] : ctr.get()) {
-            hashes.push_back(d->hash());
-        }
-        std::sort(hashes.begin(), hashes.end());
-
-        std::size_t seed = 0;
-        combine_hash(seed, char(id));
-        for (const auto h : hashes) {combine_hash(seed, h);}
-
-        return seed;
+        return ctr.hash();
     }
 
     void print(std::ostream& output) const override {
@@ -152,6 +142,16 @@ public:
         for (const auto& [d,ws] : ctr.get()) {
             output << "    - " << *d << " @ weight = " << ws.second << "\n";
         }
+    }
+
+    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+        const disMixture& oo = dynamic_cast<const disMixture&>(o);
+        return ctr.isEqual_tol(oo.ctr, tol);
+    }
+
+    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+        const disMixture& oo = dynamic_cast<const disMixture&>(o);
+        return ctr.isEqual_ulp(oo.ctr, ulp);
     }
 
     virtual dFuncID getID() const {return id;};

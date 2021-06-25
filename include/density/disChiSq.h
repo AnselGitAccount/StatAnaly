@@ -9,7 +9,7 @@ namespace statanaly {
 
 class disChiSq : public probDensFunc {
 private:
-    double k;    // parameter -- degree of freedom
+    unsigned k;    // parameter -- degree of freedom
 
 public:
     template<class T> 
@@ -63,6 +63,16 @@ public:
 
     void print(std::ostream& output) const override {
         output << "Chi Square distribution -- k = " << k;
+    }
+
+    bool isEqual_tol(const probDensFunc& o, const double tol=0) const override {
+        const disChiSq& oo = dynamic_cast<const disChiSq&>(o);
+        return k==oo.k;
+    }
+
+    bool isEqual_ulp(const probDensFunc& o, const unsigned nlp=0) const override {
+        const disChiSq& oo = dynamic_cast<const disChiSq&>(o);
+        return k==oo.k;
     }
 
     virtual dFuncID getID() const {return id;};

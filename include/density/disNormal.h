@@ -68,9 +68,26 @@ public:
         output << "Normal distribution -- mu = " << mu << "  sig = " << sig;
     }
 
+    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+        const disNormal& oo = dynamic_cast<const disNormal&>(o);
+        bool r = true;
+        r &= isEqual_fl_tol(mu, oo.mu, tol);
+        r &= isEqual_fl_tol(sig, oo.sig, tol);
+        return r;
+    }
+
+    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+        const disNormal& oo = dynamic_cast<const disNormal&>(o);
+        bool r = true;
+        r &= isEqual_fl_ulp(mu, oo.mu, ulp);
+        r &= isEqual_fl_ulp(sig, oo.sig, ulp);
+        return r;
+    }
+
     virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::NORMAL_DISTR;
 };
+
 } // namespace statanaly
 
 

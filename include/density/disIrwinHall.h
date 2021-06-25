@@ -83,6 +83,15 @@ public:
         output << "Irwin Hall distribution -- n = " << n;
     }
 
+    bool isEqual_tol(const probDensFunc& o, const double tol=0) const override {
+        const disIrwinHall& oo = dynamic_cast<const disIrwinHall&>(o);
+        return n==oo.n;
+    }
+    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp=0) const override {
+        const disIrwinHall& oo = dynamic_cast<const disIrwinHall&>(o);
+        return n==oo.n;
+    }
+
     virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::IRWIN_HALL;
 

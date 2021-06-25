@@ -14,6 +14,7 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_dContainer.cpp
     unit_test/tst_disIrwinHall.cpp
     unit_test/tst_dConvolution.cpp
+    unit_test/tst_dCompare.cpp
     feature_test/tst_markdov_chain.cpp
     feature_test/tst_rng_unix.cpp
 )

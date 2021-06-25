@@ -2,6 +2,7 @@
 #define STATANALY_PROBDENSFUNC_H_
 
 #include "specialFunc.h"
+#include "fl_comparison.h"
 #include "../../src/hasher.h"
 #include <memory>
 
@@ -42,6 +43,9 @@ public:
     // Virtual friend idiom -- The friendship will get pass down to derived classes.
     friend std::ostream& operator << (std::ostream&, const probDensFunc&);
     virtual void print(std::ostream&) const = 0;
+
+    virtual bool isEqual_tol(const probDensFunc&, const double) const = 0;
+    virtual bool isEqual_ulp(const probDensFunc&, const unsigned) const = 0;
 
     virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::BASE_DISTR;

@@ -21,6 +21,7 @@ set(StatAnaly_INC
     markov_chain.h
     type_info.h
     double_dispatcher.h
+    fl_comparison.h
     )
 
 # Form the full path to the source files...

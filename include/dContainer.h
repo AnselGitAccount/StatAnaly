@@ -14,7 +14,7 @@ class dCtr {
     using weightType = double;
     
     // Stores the list of named distribution functions that are the contents.
-    // The first weight value is the share.
+    // The first weight value is the unnormalized weight.
     // The second weight value is the normalized weight.
     std::unordered_map<probDensFunc*, std::pair<weightType,weightType>> ingreds;
 
@@ -101,12 +101,16 @@ public:
     inline void clear() {ingreds.clear();}
 
     inline std::size_t hash() const noexcept {
-        // Container is different when the contents are different.
+        // Containers are different when the contents are different.
         // Insertion order of the ingredients does NOT matter.
 
         std::vector<std::size_t> hashes;
         for (const auto& [d,w] : ingreds) {
-            hashes.push_back(d->hash());
+            // Contents -- distribution parameters and distribution weight.
+            std::size_t h = 0;
+            combine_hash(h, d->hash());
+            combine_hash(h, w.first);
+            hashes.push_back(h);
         }
         std::sort(hashes.begin(), hashes.end());
 
@@ -143,7 +147,6 @@ public:
     // Print order might be different from insertion order.
     friend std::ostream& operator << (std::ostream&, const dCtr&);
     void print(std::ostream& output) const {
-        // first, get a mapping.
         std::vector<std::vector<const probDensFunc*>> map = mapping();
 
         output << "Container content : \n";
@@ -157,6 +160,37 @@ public:
         }
         
     }
+
+    // Every distribution has to be less than tol.
+    bool isEqual_tol(const dCtr& o, const double tol) const {
+        if (ingreds.size() != o.ingreds.size())
+            return false;
+
+        for (auto it = ingreds.begin(), oit = o.ingreds.begin(); 
+            it != ingreds.end(), oit != o.ingreds.end(); 
+            it++, oit++) {
+            const bool is = it->first->isEqual_tol(*oit->first, tol);
+            if (!is) return false;
+        }
+
+        return true;
+    }
+
+    // Every distribution has to be less than N ulp.
+    bool isEqual_ulp(const dCtr& o, const unsigned ulp) const {
+        if (ingreds.size() != o.ingreds.size())
+            return false;
+
+        for (auto it = ingreds.begin(), oit = o.ingreds.begin(); 
+            it != ingreds.end(), oit != o.ingreds.end(); 
+            it++, oit++) {
+            const bool is = it->first->isEqual_ulp(*oit->first, ulp);
+            if (!is) return false;
+        }
+        
+        return true;
+    }
+
 };
 
 std::ostream& operator << (std::ostream&, const dCtr&);

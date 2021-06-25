@@ -56,6 +56,13 @@ public:
         output << "Std Uniform distribution -- a = 0  b = 1";
     }
 
+    constexpr bool isEqual_tol(const probDensFunc& o, const double tol=0) const override {
+        return true;
+    }
+    constexpr bool isEqual_ulp(const probDensFunc& o, const unsigned ulp=0) const override {
+        return true;
+    }
+
     virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::STD_UNIFORM_DISTR;
 };
@@ -125,6 +132,22 @@ public:
 
     void print(std::ostream& output) const override {
         output << "Uniform distribution -- a = " << a << "  b = " << b;
+    }
+
+    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+        const disUniform& oo = dynamic_cast<const disUniform&>(o);
+        bool r = true;
+        r &= isEqual_fl_tol(a, oo.a, tol);
+        r &= isEqual_fl_tol(b, oo.b, tol);
+        return r;
+    }
+
+    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+        const disUniform& oo = dynamic_cast<const disUniform&>(o);
+        bool r = true;
+        r &= isEqual_fl_ulp(a, oo.a, ulp);
+        r &= isEqual_fl_ulp(b, oo.b, ulp);
+        return r;
     }
 
     virtual dFuncID getID() const {return id;};
