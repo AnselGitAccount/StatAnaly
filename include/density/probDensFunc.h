@@ -16,6 +16,7 @@ enum class dFuncID {
     CHISQ_DISTR,
     MIXTURE_DISTR,
     IRWIN_HALL,
+    CAUCHY_DISTR,
     COUNT
 };
 

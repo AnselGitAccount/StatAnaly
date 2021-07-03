@@ -13,6 +13,7 @@ set(StatAnaly_INC
     density/disUniform.h
     density/disMixture.h
     density/disIrwinHall.h
+    density/disCauchy.h
     dContainer.h
     dConvolution.h
     const_values.h

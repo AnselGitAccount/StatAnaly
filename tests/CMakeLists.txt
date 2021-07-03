@@ -4,15 +4,16 @@ set(CMAKE_CXX_STANDARD 20)
 # Explicitly list the test source code and headers. The Catch header-only unit
 # test framework is stored in with the test source.
 set(StatAnaly_TEST_SRC
+    unit_test/tst_disBase.cpp
     unit_test/tst_disChiSq.cpp
     unit_test/tst_disNormal.cpp
+    unit_test/tst_disUniform.cpp
+    unit_test/tst_disCauchy.cpp
+    unit_test/tst_disIrwinHall.cpp
+    unit_test/tst_disMixture.cpp
     unit_test/tst_adjacency_matrix.cpp
     unit_test/tst_graph.cpp
-    unit_test/tst_disUniform.cpp
-    unit_test/tst_disBase.cpp
-    unit_test/tst_disMixture.cpp
     unit_test/tst_dContainer.cpp
-    unit_test/tst_disIrwinHall.cpp
     unit_test/tst_dConvolution.cpp
     unit_test/tst_dCompare.cpp
     feature_test/tst_markdov_chain.cpp
