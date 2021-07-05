@@ -27,6 +27,7 @@ public:
     }
 
     double cdf(const double x) const override {
+        std::runtime_error("To Be Implemented.");
         return 0;
     }
 

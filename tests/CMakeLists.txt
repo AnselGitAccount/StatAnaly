@@ -9,6 +9,7 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_disNormal.cpp
     unit_test/tst_disUniform.cpp
     unit_test/tst_disCauchy.cpp
+    unit_test/tst_disGamma.cpp
     unit_test/tst_disIrwinHall.cpp
     unit_test/tst_disMixture.cpp
     unit_test/tst_adjacency_matrix.cpp
