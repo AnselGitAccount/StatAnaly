@@ -3,17 +3,16 @@
 
 namespace statanaly {
 
-auto tst_disNormal_pdf(double x, double y, int z) {
-    auto myNorm = disNormal(x, y);
-    return myNorm.pdf(z);
-};
-
 
 TEST( Normal_Distribution_Tests, pdf ) {
-    EXPECT_DOUBLE_EQ(0.10798193302637613,
-        tst_disNormal_pdf(-2., 0.25, -1));
+    auto myNorm = disNormal(-2., 0.25);
+    EXPECT_DOUBLE_EQ(0.10798193302637613, myNorm.pdf(-1.));
 };
 
+TEST( Normal_Distribution_Tests, cdf ) {
+    auto myNorm = disNormal(-2., 0.25);
+    EXPECT_DOUBLE_EQ(0.97724986805182079 , myNorm.cdf(-1.));
+};
 
 TEST( Normal_Distribution_Tests, hash ) {
     disNormal d1(3, 8);

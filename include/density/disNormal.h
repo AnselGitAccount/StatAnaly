@@ -28,8 +28,8 @@ public:
     }
 
     double cdf(const double x) const override {
-        throw std::runtime_error("Need to implement");
-        return 0;
+        const double scaledx = (x-mu)/sig;
+        return 0.5 * (1. + std::erf(scaledx * M_SQRT1_2));
     }
 
     double mean() const override {
@@ -99,8 +99,5 @@ public:
     }
 };
 
-/* TODO:
- * - Implement disNormal::cdf().
- */
 
 #endif

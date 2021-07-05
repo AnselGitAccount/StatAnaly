@@ -9,7 +9,7 @@
 
 namespace statanaly {
 
-/* Factorial */
+/* Factorial ------------------------------------------ */
 template<typename T> 
 requires std::is_integral<T>::value
 constexpr inline uint64_t genFactorial(T x) {
@@ -34,10 +34,12 @@ static_assert(factorial[18] == 6402373705728000);
 
 
 
-/* Gamma function, Integer */
+/* Gamma function ------------------------------------ 
+ * Integer parameters */
 /* When argument is an integer, 
-   gamma function is equivalent to factorial:
-   Gamma(n) = (n-1)!    */
+ * gamma function is equivalent to factorial:
+ * Gamma(n) == (n-1)!    
+ */
 constexpr auto gammaIntFunc = []{
     constexpr auto LUT_size = 20;
     std::array<uint64_t, LUT_size> arr{};
@@ -53,8 +55,11 @@ constexpr auto gammaIntFunc = []{
 static_assert(gammaIntFunc[19] == 6402373705728000);
 
 
-/* Gamma function, General (Integer + FloatingPoint) */
-// http://www.numericana.com/answer/info/godfrey.htm
+/* Log Gamma function, -----------------------------------
+ * General parameters: Integer or FloatingPoint 
+ * Reference: Godfrey  
+ * http://www.numericana.com/answer/info/godfrey.htm 
+ */
 
 constexpr long double logGammaCoeffs(const long double x) {
     long double res = 
@@ -70,6 +75,7 @@ constexpr long double logGammaCoeffs(const long double x) {
 }
 
 template<typename T>
+requires std::is_floating_point_v<T>
 constexpr T logGamma(T x) {   
     x -= 1;
     T a = 607.L/128 + 0.5L;
@@ -84,6 +90,16 @@ static_assert(uint64_t(std::exp(logGamma(19.L))) > 6402373705727980);
 
 
 
-} // stantanaly
+
+/* erf function ---------------------------------------- 
+ * Use erf defined in libm for double.
+ * Use erf defined in libstdc++ (cmath.h) for other types.
+ * https://stackoverflow.com/questions/631629/erfx-and-math-h
+ */
+
+static_assert(std::erf(2.0) < 0.996);
+
+
+} // namespace stantanaly
 
 #endif
