@@ -5,17 +5,18 @@
 namespace statanaly {
 
 TEST( Gamma_Distribution, pdf ) {
-    disGamma d1(0.5, 9.0);
+    constexpr double scale = 0.5, shape= 3.0;
+    disGamma d1(scale, shape);
     
-    EXPECT_DOUBLE_EQ( 0.059540362609726359, d1.pdf(2) );
+    EXPECT_DOUBLE_EQ( 0.2930502222197468846995, d1.pdf(2) );
 }
 
 TEST( Gamma_Distribution, cdf ) {
-    disGamma d1(4,2);
+    constexpr double scale = 0.5, shape= 3.0;
+    disGamma d1(scale, shape);
 
-    // EXPECT_DOUBLE_EQ( 0.89758361765043326, d1.cdf(10) );
+    EXPECT_NEAR( 0.7618966944464556561817, d1.cdf(2), 1e-5 );
 }
-
 
 
 }

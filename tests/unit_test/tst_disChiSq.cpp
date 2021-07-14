@@ -4,16 +4,16 @@
 
 namespace statanaly {
 
-auto tst_disChiSq_pdf(int x, int y) {
-    auto myChiSq = disChiSq(x);
-    return myChiSq.pdf(y);
-};
 
 TEST( ChiSquare_Distribution_Tests, pdf ) {
-    EXPECT_DOUBLE_EQ(0.10008447084954811,
-        tst_disChiSq_pdf(9, 6));
+    auto myChiSq = disChiSq(9);
+    EXPECT_DOUBLE_EQ(0.10008447084954811, myChiSq.pdf(6));
 };
 
+TEST( ChiSquare_Distribution_Tests, cdf ) {
+    auto myChiSq = disChiSq(9);
+    EXPECT_NEAR(0.26008170790534629, myChiSq.cdf(6), 1e-7);
+};
 
 TEST( ChiSquare_Distribution_Tests, hash ) {
     // Distribution with the same parameters must be identical.

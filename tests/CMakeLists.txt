@@ -12,11 +12,13 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_disGamma.cpp
     unit_test/tst_disIrwinHall.cpp
     unit_test/tst_disMixture.cpp
+    unit_test/tst_disExponential.cpp
     unit_test/tst_adjacency_matrix.cpp
     unit_test/tst_graph.cpp
     unit_test/tst_dContainer.cpp
     unit_test/tst_dConvolution.cpp
     unit_test/tst_dCompare.cpp
+    unit_test/tst_specialFunctions.cpp
     feature_test/tst_markdov_chain.cpp
     feature_test/tst_rng_unix.cpp
 )

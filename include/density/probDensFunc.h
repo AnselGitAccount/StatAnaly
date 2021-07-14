@@ -18,6 +18,7 @@ enum class dFuncID {
     IRWIN_HALL,
     CAUCHY_DISTR,
     GAMMA_DISTR,
+    EXPONENTIAL_DISTR,
     COUNT
 };
 

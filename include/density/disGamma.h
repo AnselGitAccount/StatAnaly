@@ -8,24 +8,24 @@ namespace statanaly {
 
 class disGamma : public probDensFunc {
 private:
-    double theta;
-    double alpha;
+    double theta;   // scale
+    double alpha;   // shape
 
 public:
     template<class T>
     requires std::is_arithmetic_v<T>
-    disGamma(const T theta_, const T alpha_) {
-        theta = theta_;
-        alpha = alpha_;
+    disGamma(const T scale, const T shape) {
+        theta = scale;
+        alpha = shape;
     }
+    disGamma() = delete;
     
     double pdf (const double x) const override {
         return pow(x,alpha-1)/pow(theta,alpha) * exp(-x/theta) / std::tgamma(alpha);
     }
 
     double cdf (const double x) const override {
-        std::runtime_error("To Be Implemented.");
-        return 0;
+        return regLowerGamma(alpha, x/theta);
     }
 
     double mean() const override {

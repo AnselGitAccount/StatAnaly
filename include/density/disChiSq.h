@@ -27,8 +27,8 @@ public:
     }
 
     double cdf(const double x) const override {
-        std::runtime_error("To Be Implemented.");
-        return 0;
+        const double lgf = regLowerGamma(k/2.0, x/2);
+        return lgf;
     }
 
     double mean() const override {
@@ -90,10 +90,5 @@ public:
         return d.hash();
     }
 };
-
-
-/* TODO:
- * - Implement disChiSq::compute_cdf().
- */
 
 #endif
