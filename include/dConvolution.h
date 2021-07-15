@@ -5,7 +5,9 @@
 #include "density/disUniform.h"
 #include "density/disNormal.h"
 #include "density/disIrwinHall.h"
-
+#include "density/disCauchy.h"
+#include "density/disGamma.h"
+#include "density/disExponential.h"
 
 namespace statanaly {
 
@@ -26,6 +28,11 @@ probDensFunc* convolve(disStdUniform& lhs, disStdUniform& rhs);
 // Convolving Normal Distribution
 probDensFunc* convolve(disNormal& lhs, disNormal& rhs);
 
+// Convolving Cauchy Distribution
+probDensFunc* convolve(disCauchy& lhs, disCauchy& rhs);
+
+// Convolving Gamma Distribution
+probDensFunc* convolve(disGamma& lhs, disGamma& rhs);
 
 
 
@@ -35,16 +42,21 @@ probDensFunc* convolve(disNormal& lhs, disNormal& rhs);
 template<typename T>
 probDensFunc* convolve(std::initializer_list<T> l) = delete;
 
-
 // Convolving Standard Uniform Distribution
 template<>
 probDensFunc* convolve<disStdUniform> (std::initializer_list<disStdUniform> l);
-
 
 // Convolving Normal Distribution
 template<>
 probDensFunc* convolve<disNormal> (std::initializer_list<disNormal> l);
 
+// Convolving Cauchy Distribution
+template<>
+probDensFunc* convolve<disCauchy> (std::initializer_list<disCauchy> l);
+
+// Convolving Gamma Distribution
+template<>
+probDensFunc* convolve<disGamma> (std::initializer_list<disGamma> l);
 
 
 }   // namespace statanaly

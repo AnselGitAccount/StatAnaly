@@ -32,25 +32,28 @@ public:
     }
 
     double mean() const override {
-        throw std::runtime_error("Mean of Chauchy distribution is undefined.");
+        throw std::runtime_error("Mean of Cauchy distribution is undefined.");
         return 0;
     }
 
     double stddev() const override {
-        throw std::runtime_error("Standard Deviation of Chauchy distribution is undefined.");
+        throw std::runtime_error("Standard Deviation of Cauchy distribution is undefined.");
         return 0;
     }
 
     double variance() const override {
-        throw std::runtime_error("Variance of Chauchy distribution is undefined.");
+        throw std::runtime_error("Variance of Cauchy distribution is undefined.");
         return 0;
     }
 
     double skewness() const override {
-        throw std::runtime_error("Skewness of Chauchy distribution is undefined.");
+        throw std::runtime_error("Skewness of Cauchy distribution is undefined.");
         return 0;        
     }
     
+    auto ploc() const noexcept {return t;}
+    auto pscale() const noexcept {return s;}
+
     inline std::size_t hash() const noexcept {
         std::size_t seed = 0;
         combine_hash(seed, char(id));

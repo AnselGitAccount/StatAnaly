@@ -44,6 +44,9 @@ public:
         return 2./sqrt(alpha);
     }
 
+    auto pscale() const noexcept {return theta;}
+    auto pshape() const noexcept {return alpha;}
+
     inline std::size_t hash() const noexcept {
         std::size_t seed = 0;
         combine_hash(seed, char(id));
