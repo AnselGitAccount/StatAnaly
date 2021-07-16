@@ -55,7 +55,7 @@ static_assert(gammaIntFunc[19] == 6402373705728000);
 
 
 /* Log Gamma function -----------------------------------
- * General parameters: Integer or FloatingPoint 
+ * Takes in either Integer or FloatingPoint.
  * Reference: Godfrey  
  * http://www.numericana.com/answer/info/godfrey.htm 
  */
@@ -101,58 +101,69 @@ static_assert(std::erf(2.0) < 0.996);
 
 
 /* Regularized Lower Gamma function --------------------
- * Power series expansion upto 19 terms (ie, k=0..18)
- * https://www.boost.org/doc/libs/1_76_0/libs/math/doc/html/math_toolkit/sf_gamma/igamma.html
+ * Power series expansion.
+ * Source:
+ *      - Wikipedia
+ *      - AS245 (http://lib.stat.cmu.edu/apstat/245)
+ *      - https://github.com/lh3/samtools/blob/master/bcftools/kfunc.c
  */
 
-template<typename T>
-requires std::is_floating_point_v<T>
-T lowerGamma(T s, T z) {
-    constexpr std::size_t size = 19;
-    std::array<T, size> terms{};
-    for(std::size_t k=0; k<size; k++) {
-        terms[k] = pow(z,k) / factorial[k] / (s+k);
+#define STATANALY_GAMMA_EPS 1e-14
+#define STATANALY_GAMMA_TINY 1e-290
+
+inline double _regLowerGamma(double s, double z) {
+    double sum = 1, x = 1;
+    for (int k = 1; k < 100; ++k) {
+        x *= z / (s+k);
+        sum += x;
+		if (x/sum < STATANALY_GAMMA_EPS)
+            break;
     }
-
-    T sum = 0;
-    int sign = 1;
-    for(std::size_t i=0; i<size; i++) {
-        sum += sign*terms[i];
-        sign *= -1;
-    }
-
-    sum *= pow(z,s);
-    return sum;
+    return exp(s * log(z) - z - logGamma(s+1.) + log(sum));
 }
-
-template<typename T>
-requires std::is_floating_point_v<T>
-T regLowerGamma(T s, T z) {
-    T lg = lowerGamma(s,z);
-    lg /= std::tgamma(s);
-    return lg;
-}
-
 
 
 /* Regularized Upper Gamma function -------------------
- * Subtract Lower Gamma function from Complete Gamma function.
- * Use cmath Complete Gamma function.
- * https://www.boost.org/doc/libs/1_76_0/libs/math/doc/html/math_toolkit/sf_gamma/igamma.html
+ * Infinite fraction.
+ * Source:
+ *      - Numerical Recipes in C, 2nd Ed, section 5.2
  */
 
-template<typename T>
-requires std::is_floating_point_v<T>
-T upperGamma(T s, T z) {
-    return std::tgamma(s) - lowerGamma(s,z);
+inline double _regUpperGamma(double s, double z) {
+    double f = 1. + z - s;
+    double C = f, D = 0;
+    
+    // Modified Lentz's algorithm to simplify the infinite fraction.
+    for (int j = 1; j < 100; j++) {
+        double a = j * (s - j), b = (j<<1) + 1 + z - s, d;
+		D = b + a * D;
+		if (D < STATANALY_GAMMA_TINY) 
+            D = STATANALY_GAMMA_TINY;
+		C = b + a / C;
+		if (C < STATANALY_GAMMA_TINY) 
+            C = STATANALY_GAMMA_TINY;
+		D = 1. / D;
+		d = C * D;
+		f *= d;
+		if (fabs(d - 1.) < STATANALY_GAMMA_EPS) 
+            break;
+    }
+
+    return exp(s * log(z) - z - logGamma(s) - log(f));
 }
 
-template<typename T>
-requires std::is_floating_point_v<T>
-T regUpperGamma(T s, T z) {
-    return 1 - regLowerGamma(s, z); 
-}
 
+double regLowerGamma(double s, double z);
+double regUpperGamma(double s, double z);
+
+
+/* Lower and Upper Gamma function --------------------
+ * Compute regularized Lower and Upper Gamma,
+ * and then multiply by Complete Gamma function.
+ */
+
+double upperGamma(double s, double z);
+double lowerGamma(double s, double z);
 
 } // namespace stantanaly
 

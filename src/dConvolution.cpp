@@ -12,6 +12,7 @@ auto ConvolutionDoubleDispatcherInitialization = [](){
     cnvl.add<disNormal,disNormal,convolve>();
     cnvl.add<disCauchy,disCauchy,convolve>();
     cnvl.add<disGamma,disGamma,convolve>();
+    cnvl.add<disExponential,disExponential,convolve>();
     return true;
 }();
 
@@ -44,14 +45,22 @@ probDensFunc* convolve(disCauchy& lhs, disCauchy& rhs) {
 // Convolving Gamma Distribution
 probDensFunc* convolve(disGamma& lhs, disGamma& rhs) {
     // The scale parameters must be identical.
-    if (lhs.pscale() != rhs.pscale()) 
+    if (lhs.pscale() != rhs.pscale())
         throw std::runtime_error("Convolving(Gamma,Gamma) requires Gamma distributions' scale parameters to be identical.");
 
     disGamma* res = new disGamma(lhs.pscale(), lhs.pshape()+rhs.pshape());
     return static_cast<probDensFunc*>(res);
 };
 
+// Convolving Exponential Distribution
+probDensFunc* convolve(disExponential& lhs, disExponential& rhs) {
+    // The scale parameters must be identical.
+    if (lhs.prate() != rhs.prate())
+        throw std::runtime_error("Convolving(Exponential,Exponential) requires Exponential distributions' rate parameters to be identical.");
 
+    disErlang* res = new disErlang(2, lhs.prate());
+    return static_cast<probDensFunc*>(res);
+};
 
 
 /* Sum of more than 2 Independent Random Variables ------- */
@@ -103,5 +112,17 @@ probDensFunc* convolve<disGamma> (std::initializer_list<disGamma> l) {
     return static_cast<probDensFunc*>(res);
 };
 
+// Convolving Exponential Distribution
+template<>
+probDensFunc* convolve<disExponential> (std::initializer_list<disExponential> l) {
+    double n = l.begin()->prate();
+    for (auto& e : l) {
+        if (n != e.prate()) 
+            throw std::runtime_error("Convolving(Exponential,Exponential) requires Exponential distributions' rate parameters to be identical.");
+    }
+    disErlang* res = new disErlang(l.size(), n);
+
+    return static_cast<probDensFunc*>(res);
+};
 
 }

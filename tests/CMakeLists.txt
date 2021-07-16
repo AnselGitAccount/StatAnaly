@@ -13,6 +13,7 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_disIrwinHall.cpp
     unit_test/tst_disMixture.cpp
     unit_test/tst_disExponential.cpp
+    unit_test/tst_disErlang.cpp
     unit_test/tst_adjacency_matrix.cpp
     unit_test/tst_graph.cpp
     unit_test/tst_dContainer.cpp

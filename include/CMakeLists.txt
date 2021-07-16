@@ -16,6 +16,7 @@ set(StatAnaly_INC
     density/disCauchy.h
     density/disExponential.h
     density/disGamma.h
+    density/disErlang.h
     dContainer.h
     dConvolution.h
     const_values.h

@@ -19,6 +19,7 @@ enum class dFuncID {
     CAUCHY_DISTR,
     GAMMA_DISTR,
     EXPONENTIAL_DISTR,
+    ERLANG_DISTR,
     COUNT
 };
 

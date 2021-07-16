@@ -7,13 +7,13 @@ namespace statanaly {
 
 class disExponential : public probDensFunc {
 private:
-    double lambda;
+    double lambda;      // rate
 
 public:
     template<class T> 
     requires std::is_arithmetic_v<T>
-    disExponential(const T lambda_){
-        lambda = lambda_;
+    disExponential(const T rate){
+        lambda = rate;
     }
     disExponential() = delete;
 
@@ -41,6 +41,8 @@ public:
     double skewness() const override {
         return 2;
     }
+
+    auto prate() const noexcept {return lambda;}
 
     inline std::size_t hash() const noexcept {
         std::size_t seed = 0;

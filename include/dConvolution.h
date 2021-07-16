@@ -8,6 +8,7 @@
 #include "density/disCauchy.h"
 #include "density/disGamma.h"
 #include "density/disExponential.h"
+#include "density/disErlang.h"
 
 namespace statanaly {
 
@@ -34,6 +35,8 @@ probDensFunc* convolve(disCauchy& lhs, disCauchy& rhs);
 // Convolving Gamma Distribution
 probDensFunc* convolve(disGamma& lhs, disGamma& rhs);
 
+// Convolving Erlang Distribution
+probDensFunc* convolve(disExponential& lhs, disExponential& rhs);
 
 
 /* Sum of >2 Independent Random Variables ---------------------------- */
@@ -57,6 +60,10 @@ probDensFunc* convolve<disCauchy> (std::initializer_list<disCauchy> l);
 // Convolving Gamma Distribution
 template<>
 probDensFunc* convolve<disGamma> (std::initializer_list<disGamma> l);
+
+// Convolving Exponential Distribution
+template<>
+probDensFunc* convolve<disExponential> (std::initializer_list<disExponential> l);
 
 
 }   // namespace statanaly

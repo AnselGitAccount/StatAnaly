@@ -125,4 +125,34 @@ TEST( dConvolution, list_Gamma ) {
     delete rn;
 };
 
+
+TEST( dConvolution, two_Exponential ) {
+    /* Convolute a Exponential and a Exponential --> Exponential */
+
+    disExponential n1{4}, n2{4};
+    probDensFunc* rn = cnvl.go(n1,n2);
+    disErlang* rc = dynamic_cast<disErlang*>(rn);
+    disErlang expe{2,4};
+
+    EXPECT_EQ( rc->pshape(), expe.pshape() );
+    EXPECT_EQ( rc->prate(), expe.prate() );
+
+    delete rn;
+};
+
+
+TEST( dConvolution, list_Exponential ) {
+    /* Convolute a list of Exponential distribution --> Exponential */
+
+    disExponential n1{4}, n2{4}, n3{4}, n4{4};
+    probDensFunc* rn = convolve<disExponential>({n1, n2, n3, n4});
+    disErlang* rc = dynamic_cast<disErlang*>(rn);
+    disErlang expe{4,4};
+
+    EXPECT_EQ( rc->pshape(), expe.pshape() );
+    EXPECT_EQ( rc->prate(), expe.prate() );
+
+    delete rn;
+};
+
 }
