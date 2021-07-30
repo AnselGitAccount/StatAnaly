@@ -13,6 +13,7 @@ enum class dFuncID {
     NORMAL_DISTR,
     STD_UNIFORM_DISTR,
     UNIFORM_DISTR,
+    CHI_DISTR,
     CHISQ_DISTR,
     MIXTURE_DISTR,
     IRWIN_HALL,
@@ -20,6 +21,7 @@ enum class dFuncID {
     GAMMA_DISTR,
     EXPONENTIAL_DISTR,
     ERLANG_DISTR,
+    RAYLEIGH_DISTR,
     COUNT
 };
 

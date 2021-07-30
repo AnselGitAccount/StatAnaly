@@ -9,6 +9,11 @@
 
 namespace statanaly {
 
+/* Special Constants ----------------------------------
+ */
+
+
+
 /* Factorial ------------------------------------------ 
  * Generate a Lookup Table at compile-time.
  */
