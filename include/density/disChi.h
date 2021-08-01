@@ -15,7 +15,7 @@ private:
 
 public:
     template<class T>
-    requires std::is_arithmetic_v<T>
+    requires std::is_integral_v<T>
     disChi(const T dof, const double scale = 1.) {
         k = dof;
         sigma = scale;

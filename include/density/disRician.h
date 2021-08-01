@@ -2,6 +2,7 @@
 #define STATANALY_DIS_RICIAN_H_
 
 #include "probDensFunc.h"
+#include "disNcChi.h"
 
 
 namespace statanaly {
@@ -29,15 +30,14 @@ public:
 
     double cdf(const double x) const override {
         const double s_inv = 1/sigma;
-        return 1 - marcumQ(nu*s_inv, x*s_inv, 1);
+        return 1 - marcumQ(1, nu*s_inv, x*s_inv);
     }
 
     double mean() const override {
-        constexpr double sqrt_pi_2 = M_PI_2 * M_2_SQRTPI * M_SQRT1_2;   // sqrt(pi/2)
         const double x = -0.5*nu*nu/(sigma*sigma);
         const double lague = exp(x/2) * 
             ((1-x)*std::cyl_bessel_i(0,-0.5*x) - x*std::cyl_bessel_i(1,-0.5*x));
-        return sigma * sqrt_pi_2 * lague;
+        return sigma * SQRT_PI_2 * lague;
     }
 
     double stddev() const override {
@@ -90,6 +90,12 @@ public:
         r &= isEqual_fl_ulp(nu, oo.nu, ulp);
         r &= isEqual_fl_ulp(sigma, oo.sigma, ulp);
         return r;
+    }
+
+    // Rician distribution is equivalent to Noncentral Chi distribution 
+    // with the same sigma and degree-of-freedom=2.
+    explicit operator disNcChi() const {
+        return disNcChi(2,nu,sigma);
     }
 };
 

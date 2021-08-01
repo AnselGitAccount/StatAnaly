@@ -14,6 +14,8 @@ namespace statanaly {
 /* Special Constants ----------------------------------
  */
 
+// sqrt(pi/2)
+constexpr double SQRT_PI_2 = M_PI_2 * M_2_SQRTPI * M_SQRT1_2;   
 
 
 /* Factorial ------------------------------------------ 
@@ -184,7 +186,7 @@ double lowerGamma(double s, double z);
  */
 template<class T, class U>
 requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U>
-double marcumQ(const T a, const U b, const int m=1) {
+double marcumQ(const int m, const T a, const U b) {
     // M must be positive by definition
     if (m<0) throw std::invalid_argument("Marcum Q's order M must be positive.");
 
@@ -204,7 +206,7 @@ double marcumQ(const T a, const U b, const int m=1) {
  */
 template<class T, class U, class V>
 requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U> && std::is_floating_point_v<V>
-double marcumQ(const T a, const U b, const V m) {
+double marcumQ(const V m, const T a, const U b) {
     // M must be positive by definition
     if (m<0) throw std::invalid_argument("Marcum Q's order M must be positive.");
 
@@ -214,7 +216,6 @@ double marcumQ(const T a, const U b, const V m) {
     double f = 1.;   // factorial
     double sum = 0;
     for(std::size_t k=0; k<100; k++) {
-        printf("%g \n",regLowerGamma(m+k,0.5*bb));
         sum += t / f * regLowerGamma(m+k,0.5*bb);
         t *= 0.5*aa;
         f *= k+1;

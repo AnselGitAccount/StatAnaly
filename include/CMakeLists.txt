@@ -19,6 +19,7 @@ set(StatAnaly_INC
     density/disErlang.h
     density/disRayleigh.h
     density/disChi.h
+    density/disNcChi.h
     density/disRician.h
     dContainer.h
     dConvolution.h

@@ -83,7 +83,7 @@ public:
     virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::RAYLEIGH_DISTR;
 
-    // Rayleigh distribution is equivalent to central-Chi distribution 
+    // Rayleigh distribution is equivalent to Central Chi distribution 
     // with the same sigma and degree-of-freedom=2.
     explicit operator disChi() const {
         return disChi(2,sigma);
