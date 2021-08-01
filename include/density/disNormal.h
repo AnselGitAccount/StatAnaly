@@ -1,5 +1,5 @@
-#ifndef STATANALY_DEN_NORMAL_H_
-#define STATANALY_DEN_NORMAL_H_
+#ifndef STATANALY_DIS_NORMAL_H_
+#define STATANALY_DIS_NORMAL_H_
 
 #include "probDensFunc.h"
 

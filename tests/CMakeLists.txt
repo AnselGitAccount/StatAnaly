@@ -16,6 +16,7 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_disErlang.cpp
     unit_test/tst_disRayleigh.cpp
     unit_test/tst_disChi.cpp
+    unit_test/tst_disRician.cpp
     unit_test/tst_adjacency_matrix.cpp
     unit_test/tst_graph.cpp
     unit_test/tst_dContainer.cpp

@@ -35,4 +35,19 @@ TEST( Regularized_Upper_Gamma_Function, computation ) {
     EXPECT_DOUBLE_EQ( expected2, regUpperGamma(8,4) );
 }
 
+TEST( MarcumQ_Function, integer_M ) {
+    // https://www.wolframalpha.com/input/?i=ScientificForm%28marcumq%5B3%2C1.3%2C1.5%5D%29
+
+    EXPECT_FLOAT_EQ( 0.024753758803239678448239696602465, marcumQ(13 , 15 , 1) );
+    EXPECT_FLOAT_EQ( 0.580034435214153658566764755380761, marcumQ(1.3, 1.5, 1) );
+    EXPECT_FLOAT_EQ( 0.944047836736561254878101527678606, marcumQ(1.3, 1.5, 3) );
+}
+
+TEST( MarcumQ_Function, non_integer_M ) {
+    // https://www.wolframalpha.com/input/?i=ScientificForm%28marcumq%5B1.4%2C1.3%2C1.5%5D%29
+
+    EXPECT_FLOAT_EQ( 0.692728870227774340018922937858990, marcumQ(1.3, 1.5, 1.4) );
+}
+
+
 }

@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <cmath>
 #include "../const_values.h"
+#include <cstdio>
+#include <stdexcept>
 
 namespace statanaly {
 
@@ -140,7 +142,9 @@ inline double _regUpperGamma(double s, double z) {
     
     // Modified Lentz's algorithm to simplify the infinite fraction.
     for (int j = 1; j < 100; j++) {
-        double a = j * (s - j), b = (j<<1) + 1 + z - s, d;
+        double a = j * (s - j);
+        double b = (j<<1) + 1 + z - s;
+        double d;
 		D = b + a * D;
 		if (D < STATANALY_GAMMA_TINY) 
             D = STATANALY_GAMMA_TINY;
@@ -157,7 +161,8 @@ inline double _regUpperGamma(double s, double z) {
     return exp(s * log(z) - z - logGamma(s) - log(f));
 }
 
-
+// z is the bound of the integral.
+// s is the power.
 double regLowerGamma(double s, double z);
 double regUpperGamma(double s, double z);
 
@@ -167,8 +172,56 @@ double regUpperGamma(double s, double z);
  * and then multiply by Complete Gamma function.
  */
 
+// z is the bound of the integral.
+// s is the power.
 double upperGamma(double s, double z);
 double lowerGamma(double s, double z);
+
+
+/* Marcum Q-Function (For integer M) -----------------
+ * Sum up ~100 terms for the series form.
+ * M must be positive by definition
+ */
+template<class T, class U>
+requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U>
+double marcumQ(const T a, const U b, const int m=1) {
+    // M must be positive by definition
+    if (m<0) throw std::invalid_argument("Marcum Q's order M must be positive.");
+
+    const double p = double(a)*b;
+    const double s = double(a)/b;
+    double t = pow(s,1-m);
+    double sum = 0;
+    for(int k=1-m; k<100-m; k++) {
+        sum += t * std::cyl_bessel_i(abs(k),p);
+        t *= s;
+    }
+    return exp(-0.5*(a*a+b*b)) * sum;
+}
+
+
+/* Marcum Q-Function (For non-integer M) ------------- 
+ */
+template<class T, class U, class V>
+requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U> && std::is_floating_point_v<V>
+double marcumQ(const T a, const U b, const V m) {
+    // M must be positive by definition
+    if (m<0) throw std::invalid_argument("Marcum Q's order M must be positive.");
+
+    const double aa = a*a;
+    const double bb = b*b;
+    double t = 1.;
+    double f = 1.;   // factorial
+    double sum = 0;
+    for(std::size_t k=0; k<100; k++) {
+        printf("%g \n",regLowerGamma(m+k,0.5*bb));
+        sum += t / f * regLowerGamma(m+k,0.5*bb);
+        t *= 0.5*aa;
+        f *= k+1;
+    }
+    return 1. - exp(-0.5*aa) * sum;
+}
+
 
 } // namespace stantanaly
 

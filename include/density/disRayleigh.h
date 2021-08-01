@@ -1,5 +1,5 @@
-#ifndef STATANALY_DEN_RAYLEIGH_H_
-#define STATANALY_DEN_RAYLEIGH_H_
+#ifndef STATANALY_DIS_RAYLEIGH_H_
+#define STATANALY_DIS_RAYLEIGH_H_
 
 #include "probDensFunc.h"
 #include "disChi.h"
