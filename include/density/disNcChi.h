@@ -11,17 +11,18 @@ namespace statanaly {
 class disNcChi : public probDensFunc {
 private:
     unsigned k;     // degree of freedom
-    double lambda;  // related to mean
+    double lambda;  // distance
     double sigma;   // scale
 
 public:
     template<class T, class U>
     requires std::is_integral_v<T> && std::is_arithmetic_v<U>
-    disNcChi(const T dof, const U mean, const double scale = 1.) {
+    disNcChi(const T dof, const U distance, const double scale = 1.) {
         k = dof;
-        lambda = mean;
+        lambda = distance;
         sigma = scale;
     }
+    disNcChi() = delete;
     ~disNcChi() = default;
 
     double pdf(const double x) const override {

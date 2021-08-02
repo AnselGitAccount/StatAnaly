@@ -7,7 +7,10 @@
 # file(GLOB ...) or not, you will need to re-run cmake, but with an explicit
 # file list, you know beforehand why your code isn't compiling. 
 set(StatAnaly_INC
+    density/disChi.h
     density/disChiSq.h
+    density/disNcChi.h
+    density/disNcChiSq.h
     density/disNormal.h
     density/probDensFunc.h
     density/disUniform.h
@@ -18,8 +21,6 @@ set(StatAnaly_INC
     density/disGamma.h
     density/disErlang.h
     density/disRayleigh.h
-    density/disChi.h
-    density/disNcChi.h
     density/disRician.h
     dContainer.h
     dConvolution.h

@@ -5,7 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 # test framework is stored in with the test source.
 set(StatAnaly_TEST_SRC
     unit_test/tst_disBase.cpp
+    unit_test/tst_disChi.cpp
     unit_test/tst_disChiSq.cpp
+    unit_test/tst_disNcChi.cpp
+    unit_test/tst_disNcChiSq.cpp
     unit_test/tst_disNormal.cpp
     unit_test/tst_disUniform.cpp
     unit_test/tst_disCauchy.cpp
@@ -15,8 +18,6 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_disExponential.cpp
     unit_test/tst_disErlang.cpp
     unit_test/tst_disRayleigh.cpp
-    unit_test/tst_disChi.cpp
-    unit_test/tst_disNcChi.cpp
     unit_test/tst_disRician.cpp
     unit_test/tst_adjacency_matrix.cpp
     unit_test/tst_graph.cpp
