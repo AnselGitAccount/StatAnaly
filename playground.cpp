@@ -1,18 +1,23 @@
 #include <iostream>
 #include "gtest/gtest.h"
 
-#include "include/density/disMixture.h"
-#include "include/density/disNormal.h"
-#include "include/density/disUniform.h"
-#include "include/density/disIrwinHall.h"
-#include "include/density/disChiSq.h"
-#include "include/density/disCauchy.h"
-#include "include/density/disGamma.h"
-#include "include/density/disExponential.h"
-#include "include/dContainer.h"
-#include "include/fl_comparison.h"
-#include "include/dCompare.h"
-#include "include/dConvolution.h"
+#include "density/disMixture.h"
+#include "density/disNormal.h"
+#include "density/disUniform.h"
+#include "density/disIrwinHall.h"
+#include "density/disChiSq.h"
+#include "density/disCauchy.h"
+#include "density/disGamma.h"
+#include "density/disExponential.h"
+#include "density/disChi.h"
+#include "density/disRayleigh.h"
+#include "density/disRician.h"
+#include "density/disNcChi.h"
+#include "density/disNcChiSq.h"
+#include "dContainer.h"
+#include "fl_comparison.h"
+#include "dCompare.h"
+#include "dConvolution.h"
 
 using namespace statanaly;
 
@@ -28,20 +33,15 @@ int main(int argc, char** argv) {
     // std::cout << 1-1/exp(1) << std::endl;
 
     std::cout.precision(std::numeric_limits<double>::max_digits10);
-    // std::cout << regLowerGamma(1.0,2.0) << std::endl;
-    // std::cout << regUpperGamma(1.0,2.0) << std::endl;
 
-    disGamma n1{1,2}, n2{1,1}, n3{1., 2.3}, n4{1., 0.4};
-    probDensFunc* rn = convolve<disGamma>({n1, n2, n3, n4});
-    disGamma* rc = dynamic_cast<disGamma*>(rn);
-    disGamma expe{1., 5.7};
+    disNcChiSq d1(2,3);
+    
 
-    if ( rc->pscale() == expe.pscale() ) {
-        std::cout << "scale\n";
-    }
-    if ( rc->pshape() == expe.pshape() ) {
-        std::cout << "shape\n";
-    }
+    std::cout << d1.pdf(2) << std::endl;
+    std::cout << d1.cdf(2) << std::endl;
+    
+    
+    // printf("%g \n",regLowerGamma(-2.4, 1.125));
 
     return 1;
 }

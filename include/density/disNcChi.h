@@ -12,24 +12,21 @@ class disNcChi : public probDensFunc {
 private:
     unsigned k;     // degree of freedom
     double lambda;  // distance
-    double sigma;   // scale
 
 public:
     template<class T, class U>
     requires std::is_integral_v<T> && std::is_arithmetic_v<U>
-    disNcChi(const T dof, const U distance, const double scale = 1.) {
+    disNcChi(const T dof, const U distance) {
         k = dof;
         lambda = distance;
-        sigma = scale;
     }
     disNcChi() = delete;
     ~disNcChi() = default;
 
     double pdf(const double x) const override {
-        const double s2_inv = 1/(sigma*sigma);
         const double kh = 0.5*k;
-        const double t = pow(lambda, 1.-kh) * s2_inv * pow(x,kh) * exp(-0.5*(x*x+lambda*lambda)*s2_inv);
-        return t * std::cyl_bessel_i(kh-1., lambda*x*s2_inv);
+        const double t = lambda * pow(x/lambda,kh) * exp(-0.5*(x*x+lambda*lambda));
+        return t * std::cyl_bessel_i(kh-1., lambda*x);
     }
 
     double cdf(const double x) const override {
@@ -66,7 +63,6 @@ public:
         combine_hash(seed, char(id));
         combine_hash(seed, k);
         combine_hash(seed, lambda);
-        combine_hash(seed, sigma);
         return seed;
     } 
 
@@ -79,7 +75,7 @@ public:
     }
 
     void print(std::ostream& output) const override {
-        output << "Non-central Chi distribution -- k = " << k << " lambda = " << lambda << " sigma = " << sigma;
+        output << "Non-central Chi distribution -- k = " << k << " lambda = " << lambda;
     }
 
     bool isEqual_tol(const probDensFunc& o, const double tol) const override {
@@ -87,7 +83,6 @@ public:
         bool r = true;
         r &= (k == oo.k);
         r &= isEqual_fl_tol(lambda, oo.lambda, tol);
-        r &= isEqual_fl_tol(sigma, oo.sigma, tol);
         return r;
     }
 
@@ -96,7 +91,6 @@ public:
         bool r = true;
         r &= (k == oo.k);
         r &= isEqual_fl_ulp(lambda, oo.lambda, ulp);
-        r &= isEqual_fl_ulp(sigma, oo.sigma, ulp);
         return r;
     }
 };

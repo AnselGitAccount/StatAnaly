@@ -18,14 +18,5 @@ TEST( Rician_Distribution, cdf ) {
     EXPECT_FLOAT_EQ(0.512532223392871104629, d1.cdf(4) );
 }
 
-TEST( Rician_Distribution, convert_to_Noncentral_Chi ) {
-
-    auto Rice   = disRician(3,4);
-    auto con    = static_cast<disNcChi>(Rice);
-    auto NcChi  = disNcChi(2,3,4);
-
-    EXPECT_DOUBLE_EQ(Rice.pdf(6), con.pdf(6));
-    EXPECT_DOUBLE_EQ(Rice.pdf(6), con.pdf(6));
-}
 
 }

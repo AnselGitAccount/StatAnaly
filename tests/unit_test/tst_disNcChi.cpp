@@ -5,15 +5,17 @@
 namespace statanaly {
 
 TEST( Noncentral_Chi_Distribution, pdf ) {
-    // Expected value is calculated by hand.
+    // https://www.wolframalpha.com/input/?i=besseli%5B0%2C6%5D*exp%28-6.5%29*2
 
-    disNcChi d1(2,3,4);
+    disNcChi d1(2,3);
     
-    EXPECT_DOUBLE_EQ(0.0862211699813562513999409928676656829, d1.pdf(2) );
+    EXPECT_FLOAT_EQ(0.2021656851300834280130675704254515255, d1.pdf(2) );
 }
 
 TEST( Noncentral_Chi_Distribution, cdf ) {
-    disNcChi d1(2,3,4);
+    // https://www.wolframalpha.com/input/?i=1-marcumq%5B1%2C3%2C2%5D
+    
+    disNcChi d1(2,3);
 
     EXPECT_DOUBLE_EQ(0.1132792455976077429640956095105139916, d1.cdf(2) );
 }

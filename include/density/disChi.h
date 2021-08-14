@@ -11,20 +11,18 @@ namespace statanaly {
 class disChi : public probDensFunc {
 private:
     unsigned k;     // degree of freedom
-    double sigma;
 
 public:
     template<class T>
     requires std::is_integral_v<T>
-    disChi(const T dof, const double scale = 1.) {
+    disChi(const T dof) {
         k = dof;
-        sigma = scale;
     }
     ~disChi() = default;
 
     double pdf(const double x) const override {
         const double ko2 = pow(2,k/2.-1) * std::tgamma(k/2.);
-        return pow(x,k-1) * exp(-x*x/2/(sigma*sigma)) / ko2 / pow(sigma,k);
+        return pow(x,k-1) * exp(-x*x/2) / ko2;
     }
 
     double cdf(const double x) const override {
@@ -54,7 +52,6 @@ public:
         std::size_t seed = 0;
         combine_hash(seed, char(id));
         combine_hash(seed, k);
-        combine_hash(seed, sigma);
         return seed;
     }
 
@@ -67,14 +64,13 @@ public:
     }
 
     void print(std::ostream& output) const override {
-        output << "Central Chi distribution -- k = " << k << " sigma = " << sigma;
+        output << "Central Chi distribution -- k = " << k;
     }
 
     bool isEqual_tol(const probDensFunc& o, const double tol=0) const override {
         const disChi& oo = dynamic_cast<const disChi&>(o);
         bool r = true;
         r &= k==oo.k;
-        r &= isEqual_fl_tol(sigma, oo.sigma, tol);
         return r;
     }
 
@@ -82,7 +78,6 @@ public:
         const disChi& oo = dynamic_cast<const disChi&>(o);
         bool r = true;
         r &= k==oo.k;
-        r &= isEqual_fl_ulp(sigma, oo.sigma, ulp);
         return r;
     }
 

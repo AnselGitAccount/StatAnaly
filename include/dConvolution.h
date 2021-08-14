@@ -9,6 +9,17 @@
 #include "density/disGamma.h"
 #include "density/disExponential.h"
 #include "density/disErlang.h"
+#include "density/disRayleigh.h"
+#include "density/disRician.h"
+#include "density/disChi.h"
+#include "density/disChiSq.h"
+#include "density/disNcChi.h"
+#include "density/disNcChiSq.h"
+
+
+/* Sum of two or more Independent Random Variables is the 
+    Convolution of their individual distributions --------------------- */
+
 
 namespace statanaly {
 
@@ -16,54 +27,80 @@ namespace statanaly {
 extern FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvl;
 
 
-/* Sum of two or more Independent Random Variables is the 
-    Convolution of their individual distributions --------------------- */
-
-
 // Callback functions for double dispatcher for Convolution.
 // Because the argument types are concrete types, one can call those functions with concrete types directly (aka without callbacks).
 
-// Convolving Standard Uniform Distribution
+// Sum of two Standard Uniform RVs
+// R = X + Y
 probDensFunc* convolve(disStdUniform& lhs, disStdUniform& rhs);
 
-// Convolving Normal Distribution
+// Sum of two Normal RVs
+// R = X + Y
 probDensFunc* convolve(disNormal& lhs, disNormal& rhs);
 
-// Convolving Cauchy Distribution
+// Sum of two Cauchy RVs
+// R = X + Y
 probDensFunc* convolve(disCauchy& lhs, disCauchy& rhs);
 
-// Convolving Gamma Distribution
+// Sum of two Gamma RVs
+// R = X + Y
 probDensFunc* convolve(disGamma& lhs, disGamma& rhs);
 
-// Convolving Erlang Distribution
+// Sum of two Erlang RVs
+// R = X + Y
 probDensFunc* convolve(disExponential& lhs, disExponential& rhs);
 
+// Sum of the square of two Normal RVs; then take the sqrt of the sum.
+// Each of the Normal RVs have zero mean, ie, N(0,s^2).
+// R = sqrt(X^2 + Y^2)
+probDensFunc* convolveSSqrt(disNormal& lhs, disNormal& rhs);
 
-/* Sum of >2 Independent Random Variables ---------------------------- */
 
+
+// Disable un-implemented distributions.
 // Note: initializer-list uses copy-semantics.
 template<typename T>
 probDensFunc* convolve(std::initializer_list<T> l) = delete;
 
-// Convolving Standard Uniform Distribution
+// Sum of Standard Uniform RVs
 template<>
 probDensFunc* convolve<disStdUniform> (std::initializer_list<disStdUniform> l);
 
-// Convolving Normal Distribution
+// Sum of Normal RVs
 template<>
 probDensFunc* convolve<disNormal> (std::initializer_list<disNormal> l);
 
-// Convolving Cauchy Distribution
+// Sum of Cauchy RVs
 template<>
 probDensFunc* convolve<disCauchy> (std::initializer_list<disCauchy> l);
 
-// Convolving Gamma Distribution
+// Sum of Gamma RVs
 template<>
 probDensFunc* convolve<disGamma> (std::initializer_list<disGamma> l);
 
-// Convolving Exponential Distribution
+// Sum of Exponential RVs
 template<>
 probDensFunc* convolve<disExponential> (std::initializer_list<disExponential> l);
+
+
+
+template<typename T>
+probDensFunc* convolveSq(std::initializer_list<T> l) = delete;
+
+// Sum of the square of Normal RVs.
+// R = X**2 + Y**2 + Z**2 + ...
+template<>
+probDensFunc* convolveSq<disNormal> (std::initializer_list<disNormal> l);
+
+
+
+template<typename T>
+probDensFunc* convolveSSqrt(std::initializer_list<T> l) = delete;
+
+// Sum of the square of Normal RVs; then take the sqrt of the sum.
+// R = sqrt(X**2 + Y**2 + Z**2 + ...)
+template<>
+probDensFunc* convolveSSqrt<disNormal> (std::initializer_list<disNormal> l);
 
 
 }   // namespace statanaly

@@ -91,12 +91,6 @@ public:
         r &= isEqual_fl_ulp(sigma, oo.sigma, ulp);
         return r;
     }
-
-    // Rician distribution is equivalent to Noncentral Chi distribution 
-    // with the same sigma and degree-of-freedom=2.
-    explicit operator disNcChi() const {
-        return disNcChi(2,nu,sigma);
-    }
 };
 
 }   // namespace statanaly

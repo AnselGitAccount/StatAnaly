@@ -12,9 +12,9 @@ private:
     double sig;     // parameter -- std deviation
 
 public:
-    template<class T> 
-    requires std::is_arithmetic_v<T>
-    disNormal(const T mean, const T variance){
+    template<class T, class U> 
+    requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U>
+    disNormal(const T mean, const U variance){
         mu = mean;
         sig = sqrt(variance);
     }
@@ -86,6 +86,14 @@ public:
 
     virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::NORMAL_DISTR;
+
+    double p_scale() const {
+        return sig;
+    }
+
+    double p_location() const {
+        return mu;
+    }
 };
 
 } // namespace statanaly

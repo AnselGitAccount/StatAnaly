@@ -13,7 +13,7 @@ private:
 
 public:
     template<class T> 
-    requires std::is_integral<T>::value
+    requires std::is_integral_v<T>
     disChiSq(const T dof){
         k = dof;
     }
