@@ -78,6 +78,10 @@ public:
 
     virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::CHISQ_DISTR;
+
+    unsigned p_dof() const noexcept{
+        return k;
+    }
 };
 
 }   // namespace statanaly

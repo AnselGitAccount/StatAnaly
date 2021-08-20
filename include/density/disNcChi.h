@@ -93,6 +93,14 @@ public:
         r &= isEqual_fl_ulp(lambda, oo.lambda, ulp);
         return r;
     }
+
+    auto p_dof() const noexcept{
+        return k;
+    }
+
+    auto p_distance() const noexcept{
+        return lambda;
+    }
 };
 
 }   // namesapce statanaly

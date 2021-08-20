@@ -22,9 +22,10 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_adjacency_matrix.cpp
     unit_test/tst_graph.cpp
     unit_test/tst_dContainer.cpp
-    unit_test/tst_dConvolution.cpp
     unit_test/tst_dCompare.cpp
     unit_test/tst_specialFunctions.cpp
+    unit_test/tst_dConvolution.cpp
+    unit_test/tst_dConvolution_squares.cpp
     feature_test/tst_markdov_chain.cpp
     feature_test/tst_rng_unix.cpp
 )

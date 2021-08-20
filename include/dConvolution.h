@@ -25,7 +25,8 @@ namespace statanaly {
 
 // Create a Double Dispatcher for Convolution.
 extern FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvl;
-
+extern FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvlSq;
+extern FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvlSSqrt;
 
 // Callback functions for double dispatcher for Convolution.
 // Because the argument types are concrete types, one can call those functions with concrete types directly (aka without callbacks).
@@ -50,8 +51,12 @@ probDensFunc* convolve(disGamma& lhs, disGamma& rhs);
 // R = X + Y
 probDensFunc* convolve(disExponential& lhs, disExponential& rhs);
 
+// Sum of the square of two Normal RVs.
+// The Normal RVs have zero mean, ie, N(0,sig^2).
+// R = X^2 + Y^2
+probDensFunc* convolveSq(disNormal& lhs, disNormal& rhs);
+
 // Sum of the square of two Normal RVs; then take the sqrt of the sum.
-// Each of the Normal RVs have zero mean, ie, N(0,s^2).
 // R = sqrt(X^2 + Y^2)
 probDensFunc* convolveSSqrt(disNormal& lhs, disNormal& rhs);
 

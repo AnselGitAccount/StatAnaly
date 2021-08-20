@@ -1,3 +1,13 @@
+/* Test of convolution of probability distribution functions.
+ *
+ * (1) Sum of two Random Variables 
+ *      R = X + Y
+ *
+ * (2) Sum of a list of Random Variabales
+ *      R = A + B + C + D + ...
+ */
+
+
 #include "gtest/gtest.h"
 #include "../../include/dConvolution.h"
 #include "../../include/density/disNormal.h"
@@ -8,7 +18,7 @@
 namespace statanaly {
 
 TEST( dConvolution, two_StdUniform ) {
-    /* Convolute a standard uniform and a standard uniform --> IrwinHall */
+    /* a standard uniform + a standard uniform --> IrwinHall */
 
     disStdUniform su1{}, su2{};
     probDensFunc* rsu = cnvl.go(su1, su2);
@@ -28,7 +38,7 @@ TEST( dConvolution, two_StdUniform ) {
 
 
 TEST( dConvolution, list_StdUniform ) {
-    /* Convolute a list of standard uniform distributions --> Irwinhall */
+    /* Sum of a list of standard uniform RVs --> Irwinhall */
 
     disStdUniform su1{}, su2{}, su3{}, su4{};
     probDensFunc* rsu = convolve<disStdUniform>({su1, su2, su3, su4});
@@ -40,7 +50,7 @@ TEST( dConvolution, list_StdUniform ) {
 
 
 TEST( dConvolution, two_Normal ) {
-    /* Convolute a normal and a normal --> normal */
+    /* a normal + a normal --> normal */
 
     disNormal n1{1,2}, n2{2,1};
     probDensFunc* rn = cnvl.go(n1,n2);
@@ -54,7 +64,7 @@ TEST( dConvolution, two_Normal ) {
 
 
 TEST( dConvolution, list_Normal ) {
-    /* Convolute a list of normal distribution --> normal */
+    /* Sum of a list of normal RVs --> normal */
 
     disNormal n1{1,2}, n2{2,1}, n3{4.3, 2.3}, n4{1.2, 0.4};
     probDensFunc* rn = convolve<disNormal>({n1, n2, n3, n4});
@@ -68,7 +78,7 @@ TEST( dConvolution, list_Normal ) {
 
 
 TEST( dConvolution, two_Cauchy ) {
-    /* Convolute a cauchy and a cauchy --> cauchy */
+    /* a cauchy + a cauchy --> cauchy */
 
     disCauchy n1{1,2}, n2{2,1};
     probDensFunc* rn = cnvl.go(n1,n2);
@@ -83,7 +93,7 @@ TEST( dConvolution, two_Cauchy ) {
 
 
 TEST( dConvolution, list_Cauchy ) {
-    /* Convolute a list of Cauchy distribution --> Cauchy */
+    /* Sum of a list of Cauchy RVs --> Cauchy */
 
     disCauchy n1{1,2}, n2{2,1}, n3{4.3, 2.3}, n4{1.2, 0.4};
     probDensFunc* rn = convolve<disCauchy>({n1, n2, n3, n4});
@@ -97,7 +107,7 @@ TEST( dConvolution, list_Cauchy ) {
 };
 
 TEST( dConvolution, two_Gamma ) {
-    /* Convolute a Gamma and a Gamma --> Gamma */
+    /* a Gamma + a Gamma --> Gamma */
 
     disGamma n1{1,2}, n2{1,1};
     probDensFunc* rn = cnvl.go(n1,n2);
@@ -112,7 +122,7 @@ TEST( dConvolution, two_Gamma ) {
 
 
 TEST( dConvolution, list_Gamma ) {
-    /* Convolute a list of Gamma distribution --> Gamma */
+    /* Sum of a list of Gamma RVs --> Gamma */
 
     disGamma n1{1,2}, n2{1,1}, n3{1., 2.3}, n4{1., 0.4};
     probDensFunc* rn = convolve<disGamma>({n1, n2, n3, n4});
@@ -127,7 +137,7 @@ TEST( dConvolution, list_Gamma ) {
 
 
 TEST( dConvolution, two_Exponential ) {
-    /* Convolute a Exponential and a Exponential --> Exponential */
+    /* a Exponential + a Exponential --> Exponential */
 
     disExponential n1{4}, n2{4};
     probDensFunc* rn = cnvl.go(n1,n2);
@@ -142,7 +152,7 @@ TEST( dConvolution, two_Exponential ) {
 
 
 TEST( dConvolution, list_Exponential ) {
-    /* Convolute a list of Exponential distribution --> Exponential */
+    /* Sum of a list of Exponential RVs --> Exponential */
 
     disExponential n1{4}, n2{4}, n3{4}, n4{4};
     probDensFunc* rn = convolve<disExponential>({n1, n2, n3, n4});

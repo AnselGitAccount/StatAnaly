@@ -34,14 +34,26 @@ int main(int argc, char** argv) {
 
     std::cout.precision(std::numeric_limits<double>::max_digits10);
 
-    disNcChiSq d1(2,3);
-    
+    // disNormal a(2,9);
+    // disNormal b(3,9);
+    // disRician s = *static_cast<disRician*>(cnvlSSqrt.go(a,b));
 
-    std::cout << d1.pdf(2) << std::endl;
-    std::cout << d1.cdf(2) << std::endl;
+    // disRician e(sqrt(2*2+3*3), sqrt(9));
+    
+    // printf("%g %g %g \n", s.p_distance(), s.p_scale(), s.pdf(2));
+    // printf("%g %g %g \n", e.p_distance(), s.p_scale(), e.pdf(2));
+    // printf("%u\n", e.isEqual_ulp(s,0));
+    // printf("%u\n", e.hash()==s.hash());
     
     
-    // printf("%g \n",regLowerGamma(-2.4, 1.125));
+    disNormal a(3,1);
+    disNormal b(4,1);
+    disNcChiSq s = *static_cast<disNcChiSq*>(cnvlSq.go(a,b));
+
+    disNcChiSq e(2,3*3+4*4);
+    printf("%u %g %g \n", s.p_dof(), s.p_distance(), s.pdf(2));
+    printf("%u %g %g \n", e.p_dof(), e.p_distance(), e.pdf(2));
+
 
     return 1;
 }

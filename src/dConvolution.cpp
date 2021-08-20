@@ -4,6 +4,7 @@
 namespace statanaly {
 
 FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvl;
+FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvlSq;
 FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvlSSqrt;
 
 
@@ -14,6 +15,11 @@ auto ConvolutionDoubleDispatcherInitialization = [](){
     cnvl.add<disCauchy,disCauchy,convolve>();
     cnvl.add<disGamma,disGamma,convolve>();
     cnvl.add<disExponential,disExponential,convolve>();
+    return true;
+}();
+
+auto ConvolutionSqDoubleDispatcherInitialization = [](){
+    cnvlSq.add<disNormal,disNormal,convolveSq>();
     return true;
 }();
 
@@ -29,59 +35,74 @@ auto ConvolutionSSqrtDoubleDispatcherInitialization = [](){
  * Note: one can call those functions with concrete types directly 
  * (aka without callbacks). ---------------------------- */
 
-probDensFunc* convolve(disStdUniform& lhs, disStdUniform& rhs) {
+probDensFunc* convolve(disStdUniform& l, disStdUniform& r) {
     probDensFunc* res = new disIrwinHall(2);
     return res;
 };
 
-probDensFunc* convolve(disNormal& lhs, disNormal& rhs) {
-    probDensFunc* res = new disNormal(lhs.mean()+rhs.mean(), lhs.variance()+rhs.variance());
+probDensFunc* convolve(disNormal& l, disNormal& r) {
+    probDensFunc* res = new disNormal(l.mean()+r.mean(), l.variance()+r.variance());
     return res;
 };
 
-probDensFunc* convolve(disCauchy& lhs, disCauchy& rhs) {
-    probDensFunc* res = new disCauchy(lhs.ploc()+rhs.ploc(), lhs.pscale()+rhs.pscale());
+probDensFunc* convolve(disCauchy& l, disCauchy& r) {
+    probDensFunc* res = new disCauchy(l.ploc()+r.ploc(), l.pscale()+r.pscale());
     return res;
 };
 
-probDensFunc* convolve(disGamma& lhs, disGamma& rhs) {
+probDensFunc* convolve(disGamma& l, disGamma& r) {
     // The scale parameters must be identical.
-    if (lhs.pscale() != rhs.pscale())
+    if (l.pscale() != r.pscale())
         throw std::invalid_argument("convolve(Gamma,Gamma) requires Gamma distributions' scale parameters to be identical.");
 
-    probDensFunc* res = new disGamma(lhs.pscale(), lhs.pshape()+rhs.pshape());
+    probDensFunc* res = new disGamma(l.pscale(), l.pshape()+r.pshape());
     return res;
 };
 
-probDensFunc* convolve(disExponential& lhs, disExponential& rhs) {
+probDensFunc* convolve(disExponential& l, disExponential& r) {
     // The scale parameters must be identical.
-    if (lhs.prate() != rhs.prate())
+    if (l.prate() != r.prate())
         throw std::invalid_argument("convolve(Exponential,Exponential) requires Exponential distributions' rate parameters to be identical.");
 
-    probDensFunc* res = new disErlang(2, lhs.prate());
+    probDensFunc* res = new disErlang(2, l.prate());
     return res;
 };
 
-probDensFunc* convolveSSqrt(disNormal& lhs, disNormal& rhs) {
-    // lhs's and rhs's means must be identical.
-    // lhs's and rhs's variances must be identical.
-    if (lhs.stddev() != rhs.stddev())
+probDensFunc* convolveSSqrt(disNormal& l, disNormal& r) {
+    // l's and r's variances must be identical.
+    if (l.stddev() != r.stddev())
         throw std::invalid_argument("convolveSSqrt(Normal,Normal) requires Normal distributions' scale parameters to be identical.");
-    if (lhs.mean() != rhs.mean())
-        throw std::invalid_argument("convolveSSqrt(Normal,Normal) requires Normal distributions' location parameters to be identical.");
 
-    // If lhs's and rhs's means are zero, return Rayleigh distribution.
+    // If l's and r's means are zero, return Rayleigh distribution.
     // Else, return Rician distribution.
     probDensFunc* res = nullptr;
-    if (lhs.mean()==0)  // && rhs.mean()==0 
-        res = new disRayleigh(lhs.stddev());
+    if (l.mean()==0 && r.mean()==0)
+        res = new disRayleigh(l.stddev());
     else {
-        auto a = std::sqrt(lhs.mean()*lhs.mean() + rhs.mean()*rhs.mean());
-        res = new disRician(a, lhs.stddev());
+        auto a = std::sqrt(l.mean()*l.mean() + r.mean()*r.mean());
+        res = new disRician(a, l.stddev());
     }
 
     return res;
-}
+};
+
+probDensFunc* convolveSq(disNormal& l, disNormal& r) {
+    // l's and r's variances must be equal one.
+    if (l.stddev() != 1 || r.stddev() != 1)
+        throw std::invalid_argument("convolveSq(Normal,Normal) requires Normal distributions' scale parameters to be one.");
+
+    // If l's and r's means are zero, return central chi distribution.
+    // Else, return noncentral chi distribution.
+    probDensFunc* res = nullptr;
+    if (l.mean()==0 && r.mean()==0)
+        res = new disChiSq(2);
+    else {
+        auto a = l.mean()*l.mean() + r.mean()*r.mean();
+        res = new disNcChiSq(2,a);
+    }
+
+    return res;
+};
 
 
 /* Sum of more than 2 Independent Random Variables ------- */
@@ -143,14 +164,10 @@ probDensFunc* convolve<disExponential> (std::initializer_list<disExponential> l)
 
 template<>
 probDensFunc* convolveSSqrt<disNormal> (std::initializer_list<disNormal> l) {
-    // If the Normal distributions' means are zero, then it is Central Chi.
-    // Else, then it is Non-central Chi.
     double mu  = l.begin()->p_location();
     double sig = l.begin()->p_scale();
     long double a = 0;
     for (auto& e : l) {
-        if (mu  != e.p_location()) 
-            throw std::invalid_argument("ConvolveSSqrt({Normal_i}) requires Normal distributions' location parameters (ie, mean) to be zero.");
         if (1 != e.p_scale())
             throw std::invalid_argument("ConvolveSSqrt({Normal_i}) requires Normal distributions' scale parameters to be One");
         if (sig != e.p_scale())
@@ -158,6 +175,8 @@ probDensFunc* convolveSSqrt<disNormal> (std::initializer_list<disNormal> l) {
         a += e.p_location()*e.p_location();
     }
 
+    // If the Normal distributions' means are zero, then it is Central Chi.
+    // Else, then it is Non-central Chi.
     probDensFunc* res = nullptr;
     if (mu==0)
         res = new disChi(l.size());
@@ -169,14 +188,10 @@ probDensFunc* convolveSSqrt<disNormal> (std::initializer_list<disNormal> l) {
 
 template<>
 probDensFunc* convolveSq<disNormal> (std::initializer_list<disNormal> l) {
-    // If the Normal distributions' means are zero, then it is Central Chi Square.
-    // Else, then it is Non-central Chi Square.
     double mu  = l.begin()->p_location();
     double sig = l.begin()->p_scale();
     long double a = 0;
     for (auto& e : l) {
-        if (mu  != e.p_location()) 
-            throw std::invalid_argument("ConvolveSq({Normal_i}) requires Normal distributions' location parameters (ie, mean) to be zero.");
         if (1 != e.p_scale())
             throw std::invalid_argument("ConvolveSq({Normal_i}) requires Normal distributions' scale parameters to be One");
         if (sig != e.p_scale())
@@ -184,6 +199,8 @@ probDensFunc* convolveSq<disNormal> (std::initializer_list<disNormal> l) {
         a += e.p_location()*e.p_location();
     }
 
+    // If the Normal distributions' means are zero, then it is Central Chi Square.
+    // Else, then it is Non-central Chi Square.
     probDensFunc* res = nullptr;
     if (mu==0)
         res = new disChiSq(l.size());

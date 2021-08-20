@@ -10,14 +10,14 @@ namespace statanaly {
 class disRician : public probDensFunc {
 private:
     double nu;      // distance
-    double sigma;   // spread
+    double sigma;   // scale
 
 public:
     template<class T, class U>
     requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U> 
-    disRician(const T distance, const U spread) {
+    disRician(const T distance, const U scale) {
         nu = std::abs(distance);
-        sigma = spread;
+        sigma = scale;
     }
     disRician() = delete;
     ~disRician() = default;
@@ -90,6 +90,14 @@ public:
         r &= isEqual_fl_ulp(nu, oo.nu, ulp);
         r &= isEqual_fl_ulp(sigma, oo.sigma, ulp);
         return r;
+    }
+
+    auto p_distance() const noexcept {
+        return nu;
+    }
+
+    auto p_scale() const noexcept {
+        return sigma;
     }
 };
 
