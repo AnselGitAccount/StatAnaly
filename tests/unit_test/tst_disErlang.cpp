@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../include/density/disErlang.h"
+#include "density/disErlang.h"
 
 
 namespace statanaly {

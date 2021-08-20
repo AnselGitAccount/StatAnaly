@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../include/density/specialFunc.h"
+#include "density/specialFunc.h"
 
 
 namespace statanaly {

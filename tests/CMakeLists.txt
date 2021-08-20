@@ -28,6 +28,7 @@ set(StatAnaly_TEST_SRC
     unit_test/tst_dConvolution_squares.cpp
     feature_test/tst_markdov_chain.cpp
     feature_test/tst_rng_unix.cpp
+    tst_utils_graph.h
 )
 
 set(StatAnaly_TEST_HEADER

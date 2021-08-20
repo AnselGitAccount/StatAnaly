@@ -15,10 +15,10 @@
 
 
 #include "gtest/gtest.h"
-#include "../../include/dConvolution.h"
-#include "../../include/density/disNormal.h"
-#include "../../include/density/disRayleigh.h"
-#include "../../include/density/disRician.h"
+#include "dConvolution.h"
+#include "density/disNormal.h"
+#include "density/disRayleigh.h"
+#include "density/disRician.h"
 
 namespace statanaly {
 

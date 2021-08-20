@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../include/rand_num_gen.h"
+#include "rand_num_gen.h"
 #include <unordered_set>
 
 namespace statanaly {

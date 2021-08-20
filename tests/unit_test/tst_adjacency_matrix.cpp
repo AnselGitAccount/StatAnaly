@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../src/adjacency.h"
+#include "adjacency.h"
 #include "../tst_utils_graph.h"
 
 

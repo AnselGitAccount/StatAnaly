@@ -3,7 +3,7 @@
 
 #include "specialFunc.h"
 #include "fl_comparison.h"
-#include "../../src/hasher.h"
+#include "hasher.h"
 #include <memory>
 
 namespace statanaly {

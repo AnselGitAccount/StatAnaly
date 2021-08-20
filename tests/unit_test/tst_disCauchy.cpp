@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../include/density/disCauchy.h"
+#include "density/disCauchy.h"
 
 
 namespace statanaly {

@@ -2,7 +2,7 @@
 #define STATANALY_DIS_MIXTURE_H_
 
 #include "probDensFunc.h"
-#include "../dContainer.h"
+#include "dContainer.h"
 #include <vector>
 #include <map>
 

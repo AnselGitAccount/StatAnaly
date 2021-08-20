@@ -9,10 +9,10 @@
 
 
 #include "gtest/gtest.h"
-#include "../../include/dConvolution.h"
-#include "../../include/density/disNormal.h"
-#include "../../include/density/disUniform.h"
-#include "../../include/density/disIrwinHall.h"
+#include "dConvolution.h"
+#include "density/disNormal.h"
+#include "density/disUniform.h"
+#include "density/disIrwinHall.h"
 
 
 namespace statanaly {

@@ -14,9 +14,6 @@ set(StatAnaly_SRC
     dContainer.cpp
     dConvolution.cpp
     type_info.cpp
-    adjacency.h
-    graph.h
-    hasher.h
     )
 
 # Form the full path to the source files...

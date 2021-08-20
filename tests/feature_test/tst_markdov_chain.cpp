@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../include/markov_chain.h"
+#include "markov_chain.h"
 
 
 namespace statanaly {

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../src/graph.h"
+#include "graph.h"
 #include "../tst_utils_graph.h"
 
 

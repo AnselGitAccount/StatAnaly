@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
-#include "../../include/density/probDensFunc.h"
-#include "../../include/density/disUniform.h"
-#include "../../include/density/disNormal.h"
-#include "../../include/density/disChiSq.h"
+#include "density/probDensFunc.h"
+#include "density/disUniform.h"
+#include "density/disNormal.h"
+#include "density/disChiSq.h"
 
 namespace statanaly {
 

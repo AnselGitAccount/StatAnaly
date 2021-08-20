@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../include/density/disNcChiSq.h"
+#include "density/disNcChiSq.h"
 
 
 namespace statanaly {

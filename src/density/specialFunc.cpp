@@ -1,4 +1,4 @@
-#include "../../include/density/specialFunc.h"
+#include "density/specialFunc.h"
 
 
 namespace statanaly {

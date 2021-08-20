@@ -1,7 +1,7 @@
 #ifndef TST_UTILS_GRAPH_H_
 #define TST_UTILS_GRAPH_H_
 
-#include "../src/adjacency.h"
+#include "adjacency.h"
 
 namespace statanaly {
 

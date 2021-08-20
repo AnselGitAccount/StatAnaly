@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../include/dConvolution.h"
+#include "dConvolution.h"
 
 namespace statanaly {
 

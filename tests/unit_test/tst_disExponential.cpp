@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../../include/density/disExponential.h"
+#include "density/disExponential.h"
 
 
 namespace statanaly {

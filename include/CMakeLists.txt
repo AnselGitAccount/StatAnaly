@@ -31,6 +31,9 @@ set(StatAnaly_INC
     type_info.h
     double_dispatcher.h
     fl_comparison.h
+    adjacency.h
+    graph.h
+    hasher.h
     )
 
 # Form the full path to the source files...

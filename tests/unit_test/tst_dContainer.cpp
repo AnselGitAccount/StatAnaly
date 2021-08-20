@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
-#include "../../include/dContainer.h"
-#include "../../include/density/disNormal.h"
-#include "../../include/density/disUniform.h"
+#include "dContainer.h"
+#include "density/disNormal.h"
+#include "density/disUniform.h"
 
 namespace statanaly {
 

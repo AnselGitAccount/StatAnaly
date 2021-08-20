@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../../include/density/probDensFunc.h"
+#include "density/probDensFunc.h"
 
 namespace statanaly {
 

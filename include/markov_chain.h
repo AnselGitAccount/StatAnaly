@@ -1,8 +1,8 @@
 #ifndef MARKOV_CHAIN_SOLVER_H_
 #define MARDOV_CHAIN_SOLVER_H_
 
-#include "../src/graph.h"
-#include "../src/hasher.h"
+#include "graph.h"
+#include "hasher.h"
 #include <unordered_map>
 #include <map>
 
