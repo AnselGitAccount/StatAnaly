@@ -97,14 +97,14 @@ TEST( Mixture_Distribution_Tests, hash ) {
 
 TEST( Mixture_Distribution_Tests, clone_via_cloneUnique ) {
     std::unique_ptr<disMixture> distr = constructSmartMixture();
-    std::unique_ptr<probDensFunc> clone = distr->cloneUnique();
+    std::unique_ptr<probDistr> clone = distr->cloneUnique();
     
     EXPECT_TRUE( distr->hash() == clone->hash() );
 }
 
 TEST( Mixture_Distribution_Tests, clone_via_make_unique ) {
     std::unique_ptr<disMixture> distr = constructSmartMixture();
-    std::unique_ptr<probDensFunc> clone = std::make_unique<disMixture>(static_cast<disMixture const&>(*(distr)));
+    std::unique_ptr<probDistr> clone = std::make_unique<disMixture>(static_cast<disMixture const&>(*(distr)));
     
     EXPECT_TRUE( distr->hash() == clone->hash() );
 }
@@ -112,7 +112,7 @@ TEST( Mixture_Distribution_Tests, clone_via_make_unique ) {
 TEST( Mixture_Distribution_Tests, clone_via_raw_ptr ) {
     disMixture* distr = constructMixture();
     disMixture* clone = distr->clone();
-    probDensFunc* clone2 = distr->clone();    // implicit upcast 
+    probDistr* clone2 = distr->clone();    // implicit upcast 
     
     EXPECT_TRUE( distr->hash() == clone->hash()  );
     EXPECT_TRUE( distr->hash() == clone2->hash() );

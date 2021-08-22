@@ -24,88 +24,88 @@
 namespace statanaly {
 
 // Create a Double Dispatcher for Convolution.
-extern FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvl;
-extern FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvlSq;
-extern FnDispatcher<probDensFunc,probDensFunc,probDensFunc*> cnvlSSqrt;
+extern FnDispatcher<probDistr,probDistr,probDistr*> cnvl;
+extern FnDispatcher<probDistr,probDistr,probDistr*> cnvlSq;
+extern FnDispatcher<probDistr,probDistr,probDistr*> cnvlSSqrt;
 
 // Callback functions for double dispatcher for Convolution.
 // Because the argument types are concrete types, one can call those functions with concrete types directly (aka without callbacks).
 
 // Sum of two Standard Uniform RVs
 // R = X + Y
-probDensFunc* convolve(disStdUniform& lhs, disStdUniform& rhs);
+probDistr* convolve(disStdUniform& lhs, disStdUniform& rhs);
 
 // Sum of two Normal RVs
 // R = X + Y
-probDensFunc* convolve(disNormal& lhs, disNormal& rhs);
+probDistr* convolve(disNormal& lhs, disNormal& rhs);
 
 // Sum of two Cauchy RVs
 // R = X + Y
-probDensFunc* convolve(disCauchy& lhs, disCauchy& rhs);
+probDistr* convolve(disCauchy& lhs, disCauchy& rhs);
 
 // Sum of two Gamma RVs
 // R = X + Y
-probDensFunc* convolve(disGamma& lhs, disGamma& rhs);
+probDistr* convolve(disGamma& lhs, disGamma& rhs);
 
 // Sum of two Erlang RVs
 // R = X + Y
-probDensFunc* convolve(disExponential& lhs, disExponential& rhs);
+probDistr* convolve(disExponential& lhs, disExponential& rhs);
 
 // Sum of the square of two Normal RVs.
 // The Normal RVs have zero mean, ie, N(0,sig^2).
 // R = X^2 + Y^2
-probDensFunc* convolveSq(disNormal& lhs, disNormal& rhs);
+probDistr* convolveSq(disNormal& lhs, disNormal& rhs);
 
 // Sum of the square of two Normal RVs; then take the sqrt of the sum.
 // R = sqrt(X^2 + Y^2)
-probDensFunc* convolveSSqrt(disNormal& lhs, disNormal& rhs);
+probDistr* convolveSSqrt(disNormal& lhs, disNormal& rhs);
 
 
 
 // Disable un-implemented distributions.
 // Note: initializer-list uses copy-semantics.
 template<typename T>
-probDensFunc* convolve(std::initializer_list<T> l) = delete;
+probDistr* convolve(std::initializer_list<T> l) = delete;
 
 // Sum of Standard Uniform RVs
 template<>
-probDensFunc* convolve<disStdUniform> (std::initializer_list<disStdUniform> l);
+probDistr* convolve<disStdUniform> (std::initializer_list<disStdUniform> l);
 
 // Sum of Normal RVs
 template<>
-probDensFunc* convolve<disNormal> (std::initializer_list<disNormal> l);
+probDistr* convolve<disNormal> (std::initializer_list<disNormal> l);
 
 // Sum of Cauchy RVs
 template<>
-probDensFunc* convolve<disCauchy> (std::initializer_list<disCauchy> l);
+probDistr* convolve<disCauchy> (std::initializer_list<disCauchy> l);
 
 // Sum of Gamma RVs
 template<>
-probDensFunc* convolve<disGamma> (std::initializer_list<disGamma> l);
+probDistr* convolve<disGamma> (std::initializer_list<disGamma> l);
 
 // Sum of Exponential RVs
 template<>
-probDensFunc* convolve<disExponential> (std::initializer_list<disExponential> l);
+probDistr* convolve<disExponential> (std::initializer_list<disExponential> l);
 
 
 
 template<typename T>
-probDensFunc* convolveSq(std::initializer_list<T> l) = delete;
+probDistr* convolveSq(std::initializer_list<T> l) = delete;
 
 // Sum of the square of Normal RVs.
 // R = X**2 + Y**2 + Z**2 + ...
 template<>
-probDensFunc* convolveSq<disNormal> (std::initializer_list<disNormal> l);
+probDistr* convolveSq<disNormal> (std::initializer_list<disNormal> l);
 
 
 
 template<typename T>
-probDensFunc* convolveSSqrt(std::initializer_list<T> l) = delete;
+probDistr* convolveSSqrt(std::initializer_list<T> l) = delete;
 
 // Sum of the square of Normal RVs; then take the sqrt of the sum.
 // R = sqrt(X**2 + Y**2 + Z**2 + ...)
 template<>
-probDensFunc* convolveSSqrt<disNormal> (std::initializer_list<disNormal> l);
+probDistr* convolveSSqrt<disNormal> (std::initializer_list<disNormal> l);
 
 
 }   // namespace statanaly

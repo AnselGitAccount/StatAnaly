@@ -1,10 +1,10 @@
 #include <iostream>
-#include "density/probDensFunc.h"
+#include "density/probDistr.h"
 
 namespace statanaly {
 
 // Human friendly text.
-std::ostream& operator << (std::ostream& output, const probDensFunc& distr) {
+std::ostream& operator << (std::ostream& output, const probDistr& distr) {
     distr.print(output);
     return output;
 }

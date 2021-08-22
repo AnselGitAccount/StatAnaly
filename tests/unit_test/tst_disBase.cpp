@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "density/probDensFunc.h"
+#include "density/probDistr.h"
 #include "density/disUniform.h"
 #include "density/disNormal.h"
 #include "density/disChiSq.h"
@@ -26,19 +26,19 @@ TEST(distribution_base_class, clone_via_cloneUnique) {
     // make a clone by calling a class method that calls std::make_unique (deep-copy).
 
     std::unique_ptr<disStdUniform> distr = std::make_unique<disStdUniform>();
-    std::unique_ptr<probDensFunc> clone = distr->cloneUnique();
+    std::unique_ptr<probDistr> clone = distr->cloneUnique();
     EXPECT_TRUE( tst_isClone(distr, clone) );
 
-    std::unique_ptr<probDensFunc> distr2 = std::make_unique<disStdUniform>();
-    std::unique_ptr<probDensFunc> clone2 = distr2->cloneUnique();
+    std::unique_ptr<probDistr> distr2 = std::make_unique<disStdUniform>();
+    std::unique_ptr<probDistr> clone2 = distr2->cloneUnique();
     EXPECT_TRUE( tst_isClone(distr2, clone2) );
 
     std::unique_ptr<disUniform> distr3 = std::make_unique<disUniform>(0,1);
-    std::unique_ptr<probDensFunc> clone3 = distr3->cloneUnique();
+    std::unique_ptr<probDistr> clone3 = distr3->cloneUnique();
     EXPECT_TRUE( tst_isClone(distr3, clone3) );
 
-    std::unique_ptr<probDensFunc> distr4 = std::make_unique<disUniform>(0,1);
-    std::unique_ptr<probDensFunc> clone4 = distr4->cloneUnique();
+    std::unique_ptr<probDistr> distr4 = std::make_unique<disUniform>(0,1);
+    std::unique_ptr<probDistr> clone4 = distr4->cloneUnique();
     EXPECT_TRUE( tst_isClone(distr4, clone4) );
 
 }
@@ -71,12 +71,12 @@ TEST(distribution_base_class, cast_to_derived_via_unique_ptr) {
     // After cloning, cast a Base to a Derived with unique_ptr.
 
     std::unique_ptr<disStdUniform> distr = std::make_unique<disStdUniform>();
-    std::unique_ptr<probDensFunc>  clone = distr->cloneUnique();
+    std::unique_ptr<probDistr>  clone = distr->cloneUnique();
     std::unique_ptr<disStdUniform> cloneDerived (static_cast<disStdUniform*>(clone.release()));
     EXPECT_TRUE( tst_isClone(distr, cloneDerived) );
 
     std::unique_ptr<disUniform> distr2 = std::make_unique<disUniform>(0,1);
-    std::unique_ptr<probDensFunc>  clone2 = distr2->cloneUnique();
+    std::unique_ptr<probDistr>  clone2 = distr2->cloneUnique();
     std::unique_ptr<disUniform> cloneDerived2 (static_cast<disUniform*>(clone2.release()));
     EXPECT_TRUE( tst_isClone(distr2, cloneDerived2) );
 }
@@ -87,7 +87,7 @@ TEST(distribution_base_class, clone_via_raw_ptr) {
 
     disStdUniform* distr = new disStdUniform;
     disStdUniform* clone = distr->clone();
-    probDensFunc* clone2 = distr->clone();    // implicit upcast 
+    probDistr* clone2 = distr->clone();    // implicit upcast 
     
     EXPECT_TRUE( tst_isClone(distr, clone) );
     EXPECT_TRUE( tst_isClone(distr, clone2) );

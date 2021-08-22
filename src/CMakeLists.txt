@@ -9,7 +9,7 @@
 set(StatAnaly_SRC
     density/disChiSq.cpp
     density/disNormal.cpp
-    density/probDensFunc.cpp
+    density/probDistr.cpp
     density/specialFunc.cpp
     dContainer.cpp
     dConvolution.cpp

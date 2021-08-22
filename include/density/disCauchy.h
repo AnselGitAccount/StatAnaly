@@ -1,15 +1,22 @@
 #ifndef STATANALY_DIS_CAUCHY_H_
 #define STATANALY_DIS_CAUCHY_H_
 
-#include "probDensFunc.h"
+#include "probDistr.h"
 
 
 namespace statanaly {
 
-class disCauchy : public probDensFunc {
+/**
+ * @brief Cauchy distribution.
+ * 
+ * @param t location
+ * @param s scale
+ */
+
+class disCauchy : public probDistr {
 private:
-    double t;       // location parameter
-    double s;       // scale parameter
+    double t;
+    double s;
 
 public:
     template<class T>
@@ -62,7 +69,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disCauchy>(static_cast<disCauchy const&>(*this));
     }
 
@@ -74,7 +81,7 @@ public:
         output << "Cauchy distribution -- s = " << s << "  t = " << t;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+    bool isEqual_tol(const probDistr& o, const double tol) const override {
         const disCauchy& oo = dynamic_cast<const disCauchy&>(o);
         bool r = true;
         r &= isEqual_fl_tol(t, oo.t, tol);
@@ -82,7 +89,7 @@ public:
         return r;
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp) const override {
         const disCauchy& oo = dynamic_cast<const disCauchy&>(o);
         bool r = true;
         r &= isEqual_fl_ulp(t, oo.t, ulp);
@@ -96,6 +103,12 @@ public:
 
 }   // namespace statanaly
 
+
+/**
+ * @brief STL hasher overload.
+ * 
+ * @tparam Cauchy distribution
+ */
 
 template<>
 class std::hash<statanaly::disCauchy> {

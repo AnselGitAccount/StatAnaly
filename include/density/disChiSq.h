@@ -1,15 +1,20 @@
 #ifndef STATANALY_DIS_CHISQ_H_
 #define STATANALY_DIS_CHISQ_H_
 
-#include "probDensFunc.h"
-// #include <bits/floatn-common.h>
-// #include <bits/stdint-uintn.h>
+#include "probDistr.h"
 
 namespace statanaly {
 
-class disChiSq : public probDensFunc {
+/**
+ * @brief Central Chi Square distribution
+ * 
+ * @param k Degree of freedom
+ * 
+ */
+
+class disChiSq : public probDistr {
 private:
-    unsigned k;    // parameter -- degree of freedom
+    unsigned k;
 
 public:
     template<class T> 
@@ -54,7 +59,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disChiSq>(static_cast<disChiSq const&>(*this));
     };
 
@@ -66,12 +71,12 @@ public:
         output << "Central Chi Square distribution -- k = " << k;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol=0) const override {
+    bool isEqual_tol(const probDistr& o, const double tol=0) const override {
         const disChiSq& oo = dynamic_cast<const disChiSq&>(o);
         return k==oo.k;
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp=0) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp=0) const override {
         const disChiSq& oo = dynamic_cast<const disChiSq&>(o);
         return k==oo.k;
     }
@@ -86,6 +91,12 @@ public:
 
 }   // namespace statanaly
 
+
+/**
+ * @brief STL hasher overload
+ * 
+ * @tparam Central Chi Square distribution
+ */
 
 template<>
 class std::hash<statanaly::disChiSq> {

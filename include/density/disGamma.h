@@ -1,15 +1,22 @@
 #ifndef STATANALY_DIS_GAMMA_H_
 #define STATANALY_DIS_GAMMA_H_
 
-#include "probDensFunc.h"
+#include "probDistr.h"
 
 
 namespace statanaly {
 
-class disGamma : public probDensFunc {
+/**
+ * @brief Gamma Distribution
+ * 
+ * @param theta Scale
+ * @param alpha Shape
+ */
+
+class disGamma : public probDistr {
 private:
-    double theta;   // scale
-    double alpha;   // shape
+    double theta;
+    double alpha;
 
 public:
     template<class T>
@@ -55,7 +62,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disGamma>(static_cast<disGamma const&>(*this));
     };
 
@@ -67,7 +74,7 @@ public:
         output << "Gamma distribution -- theta = " << theta << " alpha = " << alpha;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol=0) const override {
+    bool isEqual_tol(const probDistr& o, const double tol=0) const override {
         const disGamma& oo = dynamic_cast<const disGamma&>(o);
         bool r = true;
         r &= isEqual_fl_tol(theta, oo.theta, tol);
@@ -75,7 +82,7 @@ public:
         return r;
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp=0) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp=0) const override {
         const disGamma& oo = dynamic_cast<const disGamma&>(o);
         bool r = true;
         r &= isEqual_fl_ulp(theta, oo.theta, ulp);
@@ -89,6 +96,12 @@ public:
 
 }   // namespace statanaly
 
+
+/**
+ * @brief STL hasher overload
+ * 
+ * @tparam Gamma distribution
+ */
 
 template<>
 class std::hash<statanaly::disGamma> {

@@ -1,17 +1,28 @@
 #ifndef STATANALY_DIS_NORMAL_H_
 #define STATANALY_DIS_NORMAL_H_
 
-#include "probDensFunc.h"
+#include "probDistr.h"
 
 
 namespace statanaly {
 
-class disNormal : public probDensFunc {
+/**
+ * @brief Normal Distribution
+ * 
+ * Also known as Gaussian distribution.
+ * 
+ * @param mu Mean
+ * @param sig Standard deviation
+ */
+
+class disNormal : public probDistr {
 private:
-    double mu;      // parameter -- mean
-    double sig;     // parameter -- std deviation
+
+    double mu;
+    double sig;
 
 public:
+
     template<class T, class U> 
     requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U>
     disNormal(const T mean, const U variance){
@@ -56,7 +67,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disNormal>(static_cast<disNormal const&>(*this));
     };
 
@@ -68,7 +79,7 @@ public:
         output << "Normal distribution -- mu = " << mu << "  sig = " << sig;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+    bool isEqual_tol(const probDistr& o, const double tol) const override {
         const disNormal& oo = dynamic_cast<const disNormal&>(o);
         bool r = true;
         r &= isEqual_fl_tol(mu, oo.mu, tol);
@@ -76,7 +87,7 @@ public:
         return r;
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp) const override {
         const disNormal& oo = dynamic_cast<const disNormal&>(o);
         bool r = true;
         r &= isEqual_fl_ulp(mu, oo.mu, ulp);
@@ -98,6 +109,12 @@ public:
 
 } // namespace statanaly
 
+
+/**
+ * @brief STL hasher overload
+ * 
+ * @tparam Normal distribution
+ */
 
 template<>
 class std::hash<statanaly::disNormal> {

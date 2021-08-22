@@ -1,13 +1,20 @@
 #ifndef STATANALY_DIS_EXPONENTIAL_H_
 #define STATANALY_DIS_EXPONENTIAL_H_
 
-#include "probDensFunc.h"
+#include "probDistr.h"
 
 namespace statanaly {
 
-class disExponential : public probDensFunc {
+
+/**
+ * @brief Exponential Distribution
+ * 
+ * @param lambda Rate
+ */
+
+class disExponential : public probDistr {
 private:
-    double lambda;      // rate
+    double lambda;
 
 public:
     template<class T> 
@@ -51,7 +58,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disExponential>(static_cast<disExponential const&>(*this));
     };
 
@@ -63,12 +70,12 @@ public:
         output << "Exponential distribution -- lambda = " << lambda;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+    bool isEqual_tol(const probDistr& o, const double tol) const override {
         const disExponential& oo = dynamic_cast<const disExponential&>(o);
         return isEqual_fl_tol(lambda, oo.lambda, tol);
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp) const override {
         const disExponential& oo = dynamic_cast<const disExponential&>(o);
         return isEqual_fl_ulp(lambda, oo.lambda, ulp);
     }
@@ -79,6 +86,12 @@ public:
 
 } // namespace statanaly
 
+
+/**
+ * @brief STL hasher overload
+ * 
+ * @tparam Exponential distribution
+ */
 
 template<>
 class std::hash<statanaly::disExponential> {

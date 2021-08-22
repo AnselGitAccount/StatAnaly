@@ -11,16 +11,14 @@
 
 namespace statanaly {
 
-/* Special Constants ----------------------------------
- */
+/* Special Constants ---------------------------------- */
 
-// sqrt(pi/2)
+/** sqrt(pi/2) */
 constexpr double SQRT_PI_2 = M_PI_2 * M_2_SQRTPI * M_SQRT1_2;   
 
 
-/* Factorial ------------------------------------------ 
- * Generate a Lookup Table at compile-time.
- */
+/** @brief Generate factorials.
+ * Generate a Lookup Table at compile-time. */
 template<typename T> 
 requires std::is_integral<T>::value
 constexpr inline uint64_t genFactorial(T x) {
@@ -42,12 +40,11 @@ constexpr auto factorial = []{
 static_assert(factorial[18] == 6402373705728000);
 
 
+/* Special Functions --------------------------------- */
 
-/* Gamma function ------------------------------------ 
- * Integer parameters */
-/* When argument is an integer, 
- * gamma function is equivalent to factorial:
- * Gamma(n) == (n-1)!    
+/** @brief Gamma function for integral parameters.
+ * When argument is an integer, gamma function is equivalent to factorial:
+ * Gamma(n) == (n-1)!
  */
 constexpr auto gammaIntFunc = []{
     std::array<uint64_t, 20> arr{};
@@ -63,8 +60,10 @@ constexpr auto gammaIntFunc = []{
 static_assert(gammaIntFunc[19] == 6402373705728000);
 
 
-/* Log Gamma function -----------------------------------
- * Takes in either Integer or FloatingPoint.
+
+/** @brief Generate Log Gamma function. 
+ * The Log Gamma function can take either Integeral or FloatingPoint parameters.
+ * 
  * Reference: Godfrey  
  * http://www.numericana.com/answer/info/godfrey.htm 
  */
@@ -99,7 +98,7 @@ static_assert(uint64_t(std::exp(logGamma(19.L))) > 6402373705727980);
 
 
 
-/* erf function ---------------------------------------- 
+/* erf function
  * Use erf defined in libm for type double.
  * Use erf defined in libstdc++ (cmath.h) for other types.
  * https://stackoverflow.com/questions/631629/erfx-and-math-h
@@ -109,17 +108,19 @@ static_assert(std::erf(2.0) < 0.996);
 
 
 
-/* Regularized Lower Gamma function --------------------
- * Power series expansion.
+#define STATANALY_GAMMA_EPS 1e-14
+#define STATANALY_GAMMA_TINY 1e-290
+
+/** @brief Internal implementation to Regularized Lower Gamma function.
+ * 
+ * Use Power series expansion.
  * Source:
  *      - Wikipedia
  *      - AS245 (http://lib.stat.cmu.edu/apstat/245)
  *      - https://github.com/lh3/samtools/blob/master/bcftools/kfunc.c
+ * 
+ * @see regLowerGamma()
  */
-
-#define STATANALY_GAMMA_EPS 1e-14
-#define STATANALY_GAMMA_TINY 1e-290
-
 inline double _regLowerGamma(double s, double z) {
     double sum = 1, x = 1;
     for (int k = 1; k < 100; ++k) {
@@ -132,12 +133,14 @@ inline double _regLowerGamma(double s, double z) {
 }
 
 
-/* Regularized Upper Gamma function -------------------
- * Infinite fraction.
+/** @brief Internal implementation to Regularized Upper Gamma function.
+ * 
+ * Use Infinite fraction.
  * Source:
  *      - Numerical Recipes in C, 2nd Ed, section 5.2
+ * 
+ * @see regUpperGamma()
  */
-
 inline double _regUpperGamma(double s, double z) {
     double f = 1. + z - s;
     double C = f, D = 0;
@@ -163,26 +166,59 @@ inline double _regUpperGamma(double s, double z) {
     return exp(s * log(z) - z - logGamma(s) - log(f));
 }
 
-// z is the bound of the integral.
-// s is the power.
+/**
+ * @brief Regularized Lower Gamma function.
+ * 
+ * @param s Upper bound of the integral.
+ * @param z Power.
+ * @return double 
+ */
 double regLowerGamma(double s, double z);
+
+/**
+ * @brief Regulared Upper Gamma Function.
+ * 
+ * @param s Lower bound of the integral.
+ * @param z Power.
+ * @return double 
+ */
 double regUpperGamma(double s, double z);
 
 
-/* Lower and Upper Gamma function --------------------
- * Compute regularized Lower and Upper Gamma,
+/**
+ * @brief Upper Gamma function.
+ * 
+ * Compute regularized Upper Gamma,
  * and then multiply by Complete Gamma function.
+ * 
+ * @param s Lower bound of the integral.
+ * @param z Power.
+ * @return double 
+ * @see regUpperGamma()
  */
-
-// z is the bound of the integral.
-// s is the power.
 double upperGamma(double s, double z);
+
+/**
+ * @brief Lower Gamma function.
+ * 
+ * @param s Upper bound of the integral.
+ * @param z Power.
+ * @return double 
+ * @see regLowerGamma()
+ */
 double lowerGamma(double s, double z);
 
 
-/* Marcum Q-Function (For integer M) -----------------
+/**
+ * @brief Marcum Q-Function (Integeral Order)
+ * 
  * Sum up ~100 terms for the series form.
- * M must be positive by definition
+ * Integeral argument must be positive by definition.
+ * 
+ * @param m Order. Must be Integer.
+ * @param a 
+ * @param b 
+ * @return double 
  */
 template<class T, class U>
 requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U>
@@ -202,7 +238,16 @@ double marcumQ(const int m, const T a, const U b) {
 }
 
 
-/* Marcum Q-Function (For non-integer M) ------------- 
+/**
+ * @brief Marcum Q-Function (Decimal Order)
+ * 
+ * Sum up ~100 terms for the series form.
+ * Integeral argument must be positive by definition.
+ * 
+ * @param m Order. Must be Decimal.
+ * @param a 
+ * @param b 
+ * @return double 
  */
 template<class T, class U, class V>
 requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U> && std::is_floating_point_v<V>
@@ -222,7 +267,6 @@ double marcumQ(const V m, const T a, const U b) {
     }
     return 1. - exp(-0.5*aa) * sum;
 }
-
 
 } // namespace stantanaly
 

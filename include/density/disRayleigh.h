@@ -1,17 +1,25 @@
 #ifndef STATANALY_DIS_RAYLEIGH_H_
 #define STATANALY_DIS_RAYLEIGH_H_
 
-#include "probDensFunc.h"
+#include "probDistr.h"
 #include "disChi.h"
 
 
 namespace statanaly {
 
-class disRayleigh : public probDensFunc {
+/**
+ * @brief Rayleigh Distribution
+ * 
+ * @param sigma Scale
+ */
+
+class disRayleigh : public probDistr {
 private:
-    double sigma;   // scale
+
+    double sigma;
 
 public:
+
     template<class T>
     requires std::is_arithmetic_v<T>
     disRayleigh(const T scale) {
@@ -58,7 +66,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disRayleigh>(static_cast<disRayleigh const&>(*this));
     };
 
@@ -70,12 +78,12 @@ public:
         output << "Rayleigh distribution -- sigma = " << sigma;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+    bool isEqual_tol(const probDistr& o, const double tol) const override {
         const disRayleigh& oo = dynamic_cast<const disRayleigh&>(o);
         return isEqual_fl_tol(sigma, oo.sigma, tol);
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp) const override {
         const disRayleigh& oo = dynamic_cast<const disRayleigh&>(o);
         return isEqual_fl_ulp(sigma, oo.sigma, ulp);
     }
@@ -90,6 +98,12 @@ public:
 
 }   // namespace statanaly
 
+
+/**
+ * @brief STL hasher overload
+ * 
+ * @tparam Rayleigh distribution
+ */
 
 template<>
 class std::hash<statanaly::disRayleigh> {

@@ -1,17 +1,25 @@
 #ifndef STATANALY_IRWIN_HALL_H_
 #define STATANALY_IRWIN_HALL_H_
 
-#include "probDensFunc.h"
+#include "probDistr.h"
 
 
 namespace statanaly {
 
-/* Irwin–Hall distribution is a distribution for a random variable 
-    defined as the sum of a number of independnet random variables. */
 
-class disIrwinHall : public probDensFunc {
+/**
+ * @brief Central Chi Distribution
+ * 
+ * Irwin–Hall random variable is defined as the sum of a number of independnet random variables.
+ * 
+ * @param n Num of IDD of Uniform distributions.
+ */
+
+class disIrwinHall : public probDistr {
 private:
+
     unsigned n;
+
 public:
     template<class T>
     requires std::is_integral_v<T>
@@ -71,7 +79,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disIrwinHall>(static_cast<disIrwinHall const&>(*this));
     };
 
@@ -83,21 +91,27 @@ public:
         output << "Irwin Hall distribution -- n = " << n;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol=0) const override {
+    bool isEqual_tol(const probDistr& o, const double tol=0) const override {
         const disIrwinHall& oo = dynamic_cast<const disIrwinHall&>(o);
         return n==oo.n;
     }
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp=0) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp=0) const override {
         const disIrwinHall& oo = dynamic_cast<const disIrwinHall&>(o);
         return n==oo.n;
     }
 
     virtual dFuncID getID() const {return id;};
     const dFuncID id = dFuncID::IRWIN_HALL;
-
 };
+
 } // namespace statanaly
 
+
+/**
+ * @brief STL hasher overload
+ * 
+ * @tparam Irwin Hall distribution
+ */
 
 template<>
 class std::hash<statanaly::disIrwinHall> {

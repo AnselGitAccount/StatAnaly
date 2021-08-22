@@ -1,16 +1,20 @@
 #ifndef STATANALY_DIS_CHI_H_
 #define STATANALY_DIS_CHI_H_
 
-#include "probDensFunc.h"
-
+#include "probDistr.h"
 
 namespace statanaly {
 
-/* Central Chi Distribution */
+/**
+ * @brief Central Chi Distribution.
+ * 
+ * @param k Degree of freedom
+ */
 
-class disChi : public probDensFunc {
+class disChi : public probDistr {
 private:
-    unsigned k;     // degree of freedom
+
+    unsigned k;
 
 public:
     template<class T>
@@ -55,7 +59,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disChi>(static_cast<disChi const&>(*this));
     };
 
@@ -67,14 +71,14 @@ public:
         output << "Central Chi distribution -- k = " << k;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol=0) const override {
+    bool isEqual_tol(const probDistr& o, const double tol=0) const override {
         const disChi& oo = dynamic_cast<const disChi&>(o);
         bool r = true;
         r &= k==oo.k;
         return r;
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp=0) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp=0) const override {
         const disChi& oo = dynamic_cast<const disChi&>(o);
         bool r = true;
         r &= k==oo.k;
@@ -91,6 +95,12 @@ public:
 
 }   // namespace statanaly
 
+
+/**
+ * @brief STL hasher overload.
+ * 
+ * @tparam Central Chi distribution
+ */
 
 template<>
 class std::hash<statanaly::disChi> {

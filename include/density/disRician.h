@@ -1,14 +1,22 @@
 #ifndef STATANALY_DIS_RICIAN_H_
 #define STATANALY_DIS_RICIAN_H_
 
-#include "probDensFunc.h"
+#include "probDistr.h"
 #include "disNcChi.h"
 
 
 namespace statanaly {
 
-class disRician : public probDensFunc {
+/**
+ * @brief Rician Distribution
+ * 
+ * @param nu Distance
+ * @param sigma Scale
+ */
+
+class disRician : public probDistr {
 private:
+
     double nu;      // distance
     double sigma;   // scale
 
@@ -64,7 +72,7 @@ public:
         return seed;
     } 
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disRician>(static_cast<disRician const&>(*this));
     };
 
@@ -76,7 +84,7 @@ public:
         output << "Rician distribution -- nu = " << nu << " sigma = " << sigma;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+    bool isEqual_tol(const probDistr& o, const double tol) const override {
         const disRician& oo = dynamic_cast<const disRician&>(o);
         bool r = true;
         r &= isEqual_fl_tol(nu, oo.nu, tol);
@@ -84,7 +92,7 @@ public:
         return r;
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp) const override {
         const disRician& oo = dynamic_cast<const disRician&>(o);
         bool r = true;
         r &= isEqual_fl_ulp(nu, oo.nu, ulp);
@@ -103,6 +111,12 @@ public:
 
 }   // namespace statanaly
 
+
+/**
+ * @brief STL hasher overload
+ * 
+ * @tparam Rician distribution
+ */
 
 template<>
 class std::hash<statanaly::disRician> {

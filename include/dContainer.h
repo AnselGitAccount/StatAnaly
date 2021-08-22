@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include <vector>
-#include "density/probDensFunc.h"
+#include "density/probDistr.h"
 
 
 namespace statanaly {
@@ -16,7 +16,7 @@ class dCtr {
     // Stores the list of named distribution functions that are the contents.
     // The first weight value is the unnormalized weight.
     // The second weight value is the normalized weight.
-    std::unordered_map<probDensFunc*, std::pair<weightType,weightType>> ingreds;
+    std::unordered_map<probDistr*, std::pair<weightType,weightType>> ingreds;
 
 public:
 
@@ -121,14 +121,14 @@ public:
         return seed;
     }
 
-    std::vector<std::vector<const probDensFunc*>> mapping() const {
+    std::vector<std::vector<const probDistr*>> mapping() const {
         /* map[0] is all of the base distributions;
          * map[1] is all of the normal distributions;
          * map[2] is all of the std uniform distributions;
          * ... */
-        std::vector<std::vector<const probDensFunc*>> map(
+        std::vector<std::vector<const probDistr*>> map(
             static_cast<std::size_t>(dFuncID::COUNT), 
-            std::vector<const probDensFunc*>{});
+            std::vector<const probDistr*>{});
 
         for (const auto& [d,w] : ingreds) {
             map[ static_cast<std::size_t>(d->getID()) ].push_back(d);
@@ -147,14 +147,14 @@ public:
     // Print order might be different from insertion order.
     friend std::ostream& operator << (std::ostream&, const dCtr&);
     void print(std::ostream& output) const {
-        std::vector<std::vector<const probDensFunc*>> map = mapping();
+        std::vector<std::vector<const probDistr*>> map = mapping();
 
         output << "Container content : \n";
-        for (const std::vector<const probDensFunc*>& ds : map) {
+        for (const std::vector<const probDistr*>& ds : map) {
             if (ds.size()==0) continue;
             output << "  " << ds.size() << " following type of distribution ...\n";
-            for (const probDensFunc* d : ds) {
-                const auto it = ingreds.find(const_cast<probDensFunc*>(d));
+            for (const probDistr* d : ds) {
+                const auto it = ingreds.find(const_cast<probDistr*>(d));
                 output << "    - " << *d << " @ weight = " << it->second.second << "\n";
             }
         }

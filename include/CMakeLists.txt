@@ -12,7 +12,7 @@ set(StatAnaly_INC
     density/disNcChi.h
     density/disNcChiSq.h
     density/disNormal.h
-    density/probDensFunc.h
+    density/probDistr.h
     density/disUniform.h
     density/disMixture.h
     density/disIrwinHall.h
@@ -24,7 +24,6 @@ set(StatAnaly_INC
     density/disRician.h
     dContainer.h
     dConvolution.h
-    const_values.h
     rand_num_gen.h
     statanaly.h
     markov_chain.h

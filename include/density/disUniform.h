@@ -1,13 +1,17 @@
 #ifndef STATANALY_UNIFORM_H_
 #define STATANALY_UNIFORM_H_
 
-#include "probDensFunc.h"
-
+#include "probDistr.h"
 
 namespace statanaly {
 
-/* Continuous Standard Uniform Distribution */
-class disStdUniform : public probDensFunc {
+/**
+ * @brief Standard Uniform Distribution.
+ * 
+ * No class parameters.
+ */
+
+class disStdUniform : public probDistr {
 public:
     double pdf(const double x=0) const override {
         if (0>x || 1<x) {return 0;}
@@ -44,7 +48,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disStdUniform>(static_cast<disStdUniform const&>(*this));
     };
 
@@ -56,10 +60,10 @@ public:
         output << "Std Uniform distribution -- a = 0  b = 1";
     }
 
-    constexpr bool isEqual_tol(const probDensFunc& o, const double tol=0) const override {
+    constexpr bool isEqual_tol(const probDistr& o, const double tol=0) const override {
         return true;
     }
-    constexpr bool isEqual_ulp(const probDensFunc& o, const unsigned ulp=0) const override {
+    constexpr bool isEqual_ulp(const probDistr& o, const unsigned ulp=0) const override {
         return true;
     }
 
@@ -68,9 +72,16 @@ public:
 };
 
 
-/* Continuous Uniform distribution  */
-class disUniform : public probDensFunc {
+/**
+ * @brief Uniform Distribution.
+ * 
+ * @param a Lower limit.
+ * @param b Upper limit.
+ */
+
+class disUniform : public probDistr {
 private:
+
     double a;
     double b;
 
@@ -122,7 +133,7 @@ public:
         return seed;
     }
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disUniform>(static_cast<disUniform const&>(*this));
     };
 
@@ -134,7 +145,7 @@ public:
         output << "Uniform distribution -- a = " << a << "  b = " << b;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+    bool isEqual_tol(const probDistr& o, const double tol) const override {
         const disUniform& oo = dynamic_cast<const disUniform&>(o);
         bool r = true;
         r &= isEqual_fl_tol(a, oo.a, tol);
@@ -142,7 +153,7 @@ public:
         return r;
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp) const override {
         const disUniform& oo = dynamic_cast<const disUniform&>(o);
         bool r = true;
         r &= isEqual_fl_ulp(a, oo.a, ulp);
@@ -156,6 +167,12 @@ public:
 }   // namespace statanaly
 
 
+/**
+ * @brief STL hasher overload.
+ * 
+ * @tparam Standard Normal distribution.
+ */
+
 template<>
 class std::hash<statanaly::disStdUniform> {
 public:
@@ -163,6 +180,12 @@ public:
         return d.hash();
     }
 };
+
+/**
+ * @brief STL hasher overload.
+ * 
+ * @tparam Normal distribution.
+ */
 
 template<>
 class std::hash<statanaly::disUniform> {

@@ -21,15 +21,15 @@ TEST( dConvolution, two_StdUniform ) {
     /* a standard uniform + a standard uniform --> IrwinHall */
 
     disStdUniform su1{}, su2{};
-    probDensFunc* rsu = cnvl.go(su1, su2);
+    probDistr* rsu = cnvl.go(su1, su2);
     disIrwinHall* rih = dynamic_cast<disIrwinHall*>(rsu);  // Cast to base is optional.
 
     EXPECT_TRUE( rih->hash() == disIrwinHall{2}.hash() );
 
     // Also accept pointer-to-base.
-    probDensFunc* su3 = new disStdUniform{};
-    probDensFunc* su4 = new disStdUniform{};
-    probDensFunc* rsu2 = cnvl.go(*su3, *su4);
+    probDistr* su3 = new disStdUniform{};
+    probDistr* su4 = new disStdUniform{};
+    probDistr* rsu2 = cnvl.go(*su3, *su4);
 
     EXPECT_TRUE( rih->hash() == rsu2->hash() );
 
@@ -41,7 +41,7 @@ TEST( dConvolution, list_StdUniform ) {
     /* Sum of a list of standard uniform RVs --> Irwinhall */
 
     disStdUniform su1{}, su2{}, su3{}, su4{};
-    probDensFunc* rsu = convolve<disStdUniform>({su1, su2, su3, su4});
+    probDistr* rsu = convolve<disStdUniform>({su1, su2, su3, su4});
 
     EXPECT_TRUE( rsu->hash() == disIrwinHall{4}.hash() );
 
@@ -53,7 +53,7 @@ TEST( dConvolution, two_Normal ) {
     /* a normal + a normal --> normal */
 
     disNormal n1{1,2}, n2{2,1};
-    probDensFunc* rn = cnvl.go(n1,n2);
+    probDistr* rn = cnvl.go(n1,n2);
     disNormal expe{3,3};
 
     EXPECT_FLOAT_EQ( rn->mean(), expe.mean() );
@@ -67,7 +67,7 @@ TEST( dConvolution, list_Normal ) {
     /* Sum of a list of normal RVs --> normal */
 
     disNormal n1{1,2}, n2{2,1}, n3{4.3, 2.3}, n4{1.2, 0.4};
-    probDensFunc* rn = convolve<disNormal>({n1, n2, n3, n4});
+    probDistr* rn = convolve<disNormal>({n1, n2, n3, n4});
     disNormal expe{8.5, 5.7};
 
     EXPECT_FLOAT_EQ( rn->mean(), expe.mean() );
@@ -81,7 +81,7 @@ TEST( dConvolution, two_Cauchy ) {
     /* a cauchy + a cauchy --> cauchy */
 
     disCauchy n1{1,2}, n2{2,1};
-    probDensFunc* rn = cnvl.go(n1,n2);
+    probDistr* rn = cnvl.go(n1,n2);
     disCauchy* rc = dynamic_cast<disCauchy*>(rn);
     disCauchy expe{3,3};
 
@@ -96,7 +96,7 @@ TEST( dConvolution, list_Cauchy ) {
     /* Sum of a list of Cauchy RVs --> Cauchy */
 
     disCauchy n1{1,2}, n2{2,1}, n3{4.3, 2.3}, n4{1.2, 0.4};
-    probDensFunc* rn = convolve<disCauchy>({n1, n2, n3, n4});
+    probDistr* rn = convolve<disCauchy>({n1, n2, n3, n4});
     disCauchy* rc = dynamic_cast<disCauchy*>(rn);
     disCauchy expe{8.5, 5.7};
 
@@ -110,7 +110,7 @@ TEST( dConvolution, two_Gamma ) {
     /* a Gamma + a Gamma --> Gamma */
 
     disGamma n1{1,2}, n2{1,1};
-    probDensFunc* rn = cnvl.go(n1,n2);
+    probDistr* rn = cnvl.go(n1,n2);
     disGamma* rc = dynamic_cast<disGamma*>(rn);
     disGamma expe{1,3};
 
@@ -125,7 +125,7 @@ TEST( dConvolution, list_Gamma ) {
     /* Sum of a list of Gamma RVs --> Gamma */
 
     disGamma n1{1,2}, n2{1,1}, n3{1., 2.3}, n4{1., 0.4};
-    probDensFunc* rn = convolve<disGamma>({n1, n2, n3, n4});
+    probDistr* rn = convolve<disGamma>({n1, n2, n3, n4});
     disGamma* rc = dynamic_cast<disGamma*>(rn);
     disGamma expe{1., 5.7};
 
@@ -140,7 +140,7 @@ TEST( dConvolution, two_Exponential ) {
     /* a Exponential + a Exponential --> Exponential */
 
     disExponential n1{4}, n2{4};
-    probDensFunc* rn = cnvl.go(n1,n2);
+    probDistr* rn = cnvl.go(n1,n2);
     disErlang* rc = dynamic_cast<disErlang*>(rn);
     disErlang expe{2,4};
 
@@ -155,7 +155,7 @@ TEST( dConvolution, list_Exponential ) {
     /* Sum of a list of Exponential RVs --> Exponential */
 
     disExponential n1{4}, n2{4}, n3{4}, n4{4};
-    probDensFunc* rn = convolve<disExponential>({n1, n2, n3, n4});
+    probDistr* rn = convolve<disExponential>({n1, n2, n3, n4});
     disErlang* rc = dynamic_cast<disErlang*>(rn);
     disErlang expe{4,4};
 

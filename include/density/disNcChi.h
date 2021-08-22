@@ -1,19 +1,26 @@
 #ifndef STATANALY_DIS_NONCENTRAL_CHI_H_
 #define STATANALY_DIS_NONCENTRAL_CHI_H_
 
-#include "probDensFunc.h"
-
+#include "probDistr.h"
 
 namespace statanaly {
 
-/* Non-Central Chi Distribution */
 
-class disNcChi : public probDensFunc {
+/**
+ * @brief Non-Central Chi Distribution
+ * 
+ * @param k Degree of freedom
+ * @param lambda Distance
+ */
+
+class disNcChi : public probDistr {
 private:
-    unsigned k;     // degree of freedom
-    double lambda;  // distance
+
+    unsigned k;
+    double lambda;
 
 public:
+
     template<class T, class U>
     requires std::is_integral_v<T> && std::is_arithmetic_v<U>
     disNcChi(const T dof, const U distance) {
@@ -66,7 +73,7 @@ public:
         return seed;
     } 
 
-    std::unique_ptr<probDensFunc> cloneUnique() const override {
+    std::unique_ptr<probDistr> cloneUnique() const override {
         return std::make_unique<disNcChi>(static_cast<disNcChi const&>(*this));
     };
 
@@ -78,7 +85,7 @@ public:
         output << "Non-central Chi distribution -- k = " << k << " lambda = " << lambda;
     }
 
-    bool isEqual_tol(const probDensFunc& o, const double tol) const override {
+    bool isEqual_tol(const probDistr& o, const double tol) const override {
         const disNcChi& oo = dynamic_cast<const disNcChi&>(o);
         bool r = true;
         r &= (k == oo.k);
@@ -86,7 +93,7 @@ public:
         return r;
     }
 
-    bool isEqual_ulp(const probDensFunc& o, const unsigned ulp) const override {
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp) const override {
         const disNcChi& oo = dynamic_cast<const disNcChi&>(o);
         bool r = true;
         r &= (k == oo.k);
@@ -105,6 +112,12 @@ public:
 
 }   // namesapce statanaly
 
+
+/**
+ * @brief STL hasher overload
+ * 
+ * @tparam Non-Central Chi distribution
+ */
 
 template<>
 class std::hash<statanaly::disNcChi> {

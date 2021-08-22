@@ -8,7 +8,6 @@
 
 namespace statanaly {
 
-/* Adjacency List */
 
 template<class T>
 class Node {
@@ -43,9 +42,13 @@ public:
 };
 
 
-/* Adjacency Matrix */
-// Diagonal terms are deafult to zero.
-
+/**
+ * @brief Adjacency Matrix.
+ * 
+ * Diagonal terms are deafult to zero.
+ * 
+ * @tparam SCALAR Matrix element type.
+ */
 template<class SCALAR = int32_t>
 class Adjmat {
     std::vector<std::vector<SCALAR>> d;
@@ -73,6 +76,16 @@ inline bool operator == (const Adjmat<S>& a, const Adjmat<S>& b) {
     return a.data() == b.data();
 };
 
+
+/**
+ * @brief Normalize Each Row of an Adjacency Matrix.
+ * 
+ * Normalize row elements such that each row sums up to one.
+ * 
+ * @tparam S Template parameter of Adjmat.
+ * @param mat Adjacency matrix.
+ * @return Adjmat<double> 
+ */
 template<class S>
 Adjmat<double> normalizeRow(Adjmat<S>& mat) {
     Adjmat<double> norm;
@@ -87,16 +100,25 @@ Adjmat<double> normalizeRow(Adjmat<S>& mat) {
     return norm;
 };
 
-/* Convert ASCII Text to an Adjacency matrix for 
-   Undirected graph.
-   When the last or first row is zero, use "len" to enfore dimension.*/
-// "AB1,AC1,CD1" is mapped to 
-// 0 1 1 0 
-// 1 0 0 0 
-// 1 0 0 1 
-// 0 0 1 0 
+
+/**
+ * @brief Convert ASCII Text to an Adjacency Matrix.
+ * 
+ * Convert ASCII Text to an Adjacency matrix for an undirected graph.
+ * For example:
+ * 
+ * "AB1,AC1,CD1" is translated to 
+ * 0 1 1 0 
+ * 1 0 0 0 
+ * 1 0 0 1 
+ * 0 0 1 0 
+ * 
+ * @tparam T Template paramter of Adjmat.
+ * @param str ASCII text that descripts connectivity.
+ * @return Adjmat<T> 
+ */
 template<class T>
-Adjmat<T> convert2Adjmat(std::string str, std::size_t len=0) {
+Adjmat<T> convert2Adjmat(std::string str) {
     // trim white space
     str.erase( std::remove(str.begin(), str.end(), ' '), str.end() );
 
@@ -138,15 +160,25 @@ Adjmat<T> convert2Adjmat(std::string str, std::size_t len=0) {
 
 
 
-/* Similar to convert2AdjMat, but for 
-   Directed graph */
-// "AB1,AC1,CD1" is mapped to 
-// 0 1 1 0 
-// 0 0 0 0 
-// 0 0 0 1 
-// 0 0 0 0 
+/**
+ * @brief Convert ASCII Text to a Directed Adjacency Matrix.
+ * 
+ * Similar to convert2AdjMat, but for Directed graph.
+ * For example:
+ * 
+ * "AB1,AC1,CD1" is translated to 
+ * 0 1 1 0 
+ * 0 0 0 0 
+ * 0 0 0 1 
+ * 0 0 0 0 
+ * 
+ * @tparam T 
+ * @param str 
+ * @return Adjmat<T> 
+ * @see convert2Adjmat()
+ */
 template<class T>
-Adjmat<T> convert2DirectedAdjmat(std::string str, std::size_t len=0) {
+Adjmat<T> convert2DirectedAdjmat(std::string str) {
     // trim white space
     str.erase( std::remove(str.begin(), str.end(), ' '), str.end() );
 
@@ -198,7 +230,6 @@ void PrintAdjmat(Adjmat<S>& mat) {
     }
     std::cout << std::endl;
 }
-
 
 
 }   // namespace
