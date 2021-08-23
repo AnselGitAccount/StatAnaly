@@ -93,7 +93,7 @@ public:
 
 
 /**
- * @brief STL hasher overload
+ * @brief STL hasher overload.
  * 
  * @tparam Central Chi Square distribution
  */

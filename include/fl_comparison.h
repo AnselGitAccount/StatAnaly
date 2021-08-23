@@ -4,18 +4,25 @@
 #include <cmath>
 #include <stdint.h>
 
+/**
+ * @file fl_comparison.h
+ * @brief Comparing floating point numbers.
+ * 
+ * A derivative of gtest. See gtest for detail.
+ */
 
 namespace statanaly {
 
-/* Floating point comparison code is a derivative of gtest.
- * See gtest for more comments.
+/**
+ * @brief The unsigned integer type that has the same size as the floating point number.
+ * 
+ * Use template specialization to prevent the user from using TypeWithSize<N> with incorrect size N.
+ *
+ * @tparam size Size of the representing floating point number.
  */
-
 template <std::size_t size>
 class TypeWithSize {
  public:
-  // This prevents the user from using TypeWithSize<N> with incorrect
-  // values of N.
   typedef void UInt;
 };
 
@@ -39,6 +46,9 @@ class TypeWithSize<8> {
   typedef uint64_t UInt;
 };
 
+
+// Taken from gtest:
+// 
 // Converts an integer from the sign-and-magnitude representation to
 // the biased representation.  More precisely, let N be 2 to the
 // power of (kBitCount - 1), an integer x is represented by the
@@ -113,12 +123,20 @@ bool AlmostEquals(const FloatingPointUnion<RawType,Bits>& lhs,
 }
 
 
-/* Floating pointer comparison 
-    Equality threshold can be upto kMaxUlps ULPs. 
-    Default to kMaxUlps=4 ULPs. 
-    On Intel CPU all fp calculations are done with 80-bit precision.
-    Double has 64-bits. So 4 ULP should be enough for ordinary use.
-*/
+/**
+ * @brief Floating-point comparator with ULP threshold.
+ * 
+ * Two floating-point numbers are equal if their difference is within "kMaxUlps" ULPs.
+ * 
+ * Default is kMaxUlps=4 ULPs. 
+ * On Intel CPU all fp calculations are done with 80-bit precision.
+ * Double has 64-bits. So 4 ULP should be enough for ordinary use.
+ * 
+ * @tparam RawType The raw floating-point type (either float or double).
+ * @param a 
+ * @param b 
+ * @param kMaxUlps Number of ULPs as the threshold.
+ */
 template<typename RawType>
 requires std::is_floating_point_v<RawType>
 bool isEqual_fl_ulp(const RawType a, const RawType b, const uint32_t kMaxUlps) {
@@ -135,16 +153,22 @@ bool isEqual_fl_ulp(const RawType a, const RawType b, const uint32_t kMaxUlps) {
 }
 
 
-/* Floating point comparison 
- *  Difference is compared with a numerical value.
+/**
+ * @brief Floating-point comparator with a floating-point threshold.
+ * 
+ * Two floating-point numbers are equal if their difference is the floating-point thershold.
+ * 
+ * @tparam RawType The raw floating-point type (either float or double).
+ * @tparam TolType The raw floating-point type (either float or double) for the threshold.
+ * @param a 
+ * @param b 
+ * @param tol The floating-point theshold.
  */
 template<class RawType, class TolType>
 requires std::is_arithmetic_v<TolType> && std::is_floating_point_v<RawType>
 bool isEqual_fl_tol(const RawType a, const RawType b, const TolType tol) {
     return ((a>=b) ? (a-b):(b-a)) <= tol;
 }
-
-
 
 }
 

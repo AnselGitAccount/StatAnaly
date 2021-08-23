@@ -20,10 +20,15 @@
 
 namespace statanaly {
 
-/* Pseudo RNG -- /dev/urandom
- * More direct than libstd.
+
+/**
+ * @brief Pseudo RNG
+ * 
+ * Draw from /dev/urandom
+ * More "direct" than libstd.
  * Non-blocking.
- * For Unix-like os only. */
+ * For Unix-like OS only.
+ */
 class rng_unix {
     int fd = 0;
 
@@ -73,7 +78,14 @@ public:
 };
 
 
-// Seeding Mersenne Twister with enough entropy for its state-size, i.e., 624x4 bytes
+
+/**
+ * @brief Seed STL mt19937 RN generators.
+ * 
+ * Seeding Mersenne Twister with enough entropy for its state-size, i.e., 624x4 bytes
+ * 
+ * @param eng RN generator engine.
+ */
 void setProperSeed(std::mt19937& eng) {
     // use "default" token because it is portable.
     std::random_device rd;

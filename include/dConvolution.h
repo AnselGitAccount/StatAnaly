@@ -17,9 +17,21 @@
 #include "density/disNcChiSq.h"
 
 
-/* Sum of two or more Independent Random Variables is the 
-    Convolution of their individual distributions --------------------- */
-
+/**
+ * @file dConvolution.h
+ * @brief Convolution of probability distributions.
+ * 
+ * This file contains:
+ * 
+ * 1. Callback functions for double dispatcher when convoluting two distributions.
+ * 2. Functions for convoluting a collection of distribution of the same type. 
+ * 
+ * Because the argument types are concrete types, one can call 
+ * those functions with concrete types directly.
+ *
+ * Remember: Sum of two or more Independent Random Variables is 
+ * the Convolution of their individual distributions. 
+ */
 
 namespace statanaly {
 
@@ -28,36 +40,58 @@ extern FnDispatcher<probDistr,probDistr,probDistr*> cnvl;
 extern FnDispatcher<probDistr,probDistr,probDistr*> cnvlSq;
 extern FnDispatcher<probDistr,probDistr,probDistr*> cnvlSSqrt;
 
-// Callback functions for double dispatcher for Convolution.
-// Because the argument types are concrete types, one can call those functions with concrete types directly (aka without callbacks).
 
-// Sum of two Standard Uniform RVs
-// R = X + Y
+/**
+ * @brief Sum of two Standard Uniform RVs.
+ * 
+ * R = X + Y
+ */
 probDistr* convolve(disStdUniform& lhs, disStdUniform& rhs);
 
-// Sum of two Normal RVs
-// R = X + Y
+/**
+ * @brief Sum of two Normal RVs.
+ * 
+ * R = X + Y
+ */
 probDistr* convolve(disNormal& lhs, disNormal& rhs);
 
-// Sum of two Cauchy RVs
-// R = X + Y
+/**
+ * @brief Sum of two Cauchy RVs.
+ * 
+ * R = X + Y
+ */
 probDistr* convolve(disCauchy& lhs, disCauchy& rhs);
 
-// Sum of two Gamma RVs
-// R = X + Y
+/**
+ * @brief Sum of two Gamma RVs.
+ * 
+ * R = X + Y
+ * Requires Gamma distributions' scale parameters to be identical.
+ */
 probDistr* convolve(disGamma& lhs, disGamma& rhs);
 
-// Sum of two Erlang RVs
-// R = X + Y
+/**
+ * @brief Sum of two Exponential RVs.
+ * 
+ * R = X + Y
+ * Requires Exponential distributions' rate parameters to be identical.
+ */
 probDistr* convolve(disExponential& lhs, disExponential& rhs);
 
-// Sum of the square of two Normal RVs.
-// The Normal RVs have zero mean, ie, N(0,sig^2).
-// R = X^2 + Y^2
+/**
+ * @brief Sum of the square of two Normal RVs.
+ * 
+ * R = X^2 + Y^2
+ * The Normal RVs have zero mean, ie, N(0,sig^2).
+ */
 probDistr* convolveSq(disNormal& lhs, disNormal& rhs);
 
-// Sum of the square of two Normal RVs; then take the sqrt of the sum.
-// R = sqrt(X^2 + Y^2)
+/**
+ * @brief Sum of the square of two Normal RVs, then take the sqrt of the sum.
+ * 
+ * R = sqrt(X^2 + Y^2)
+ * Requires Normal distributions' scale parameters to be identical.
+ */
 probDistr* convolveSSqrt(disNormal& lhs, disNormal& rhs);
 
 
@@ -67,43 +101,82 @@ probDistr* convolveSSqrt(disNormal& lhs, disNormal& rhs);
 template<typename T>
 probDistr* convolve(std::initializer_list<T> l) = delete;
 
-// Sum of Standard Uniform RVs
+/**
+ * @brief Sum of Standard Uniform RVs.
+ * 
+ * R = X + Y
+ */
 template<>
 probDistr* convolve<disStdUniform> (std::initializer_list<disStdUniform> l);
 
-// Sum of Normal RVs
+/**
+ * @brief Sum of Normal RVs.
+ * 
+ * R = X + Y
+ */
 template<>
 probDistr* convolve<disNormal> (std::initializer_list<disNormal> l);
 
-// Sum of Cauchy RVs
+/**
+ * @brief Sum of Cauchy RVs.
+ * 
+ * R = X + Y
+ */
 template<>
 probDistr* convolve<disCauchy> (std::initializer_list<disCauchy> l);
 
-// Sum of Gamma RVs
+/**
+ * @brief Sum of Gamma RVs.
+ * 
+ * R = X + Y
+ * Requires Gamma distributions' scale parameters to be identical.
+ */
 template<>
 probDistr* convolve<disGamma> (std::initializer_list<disGamma> l);
 
-// Sum of Exponential RVs
+
+/**
+ * @brief Sum of Exponential RVs.
+ * 
+ * R = X + Y
+ * Requires Exponential distributions' rate parameters to be identical.
+ */
 template<>
 probDistr* convolve<disExponential> (std::initializer_list<disExponential> l);
 
 
 
+
+// Disable un-implemented distributions.
 template<typename T>
 probDistr* convolveSq(std::initializer_list<T> l) = delete;
 
-// Sum of the square of Normal RVs.
-// R = X**2 + Y**2 + Z**2 + ...
+
+/**
+ * @brief Sum of the square of Normal RVs.
+ * 
+ * R = X^2 + Y^2 + Z^2 + ...
+ * 
+ * Requires Normal distributions' scale parameters to be One.
+ * Requires Normal distributions' scale parameters (ie, std deviation) to be identical.
+ */
 template<>
 probDistr* convolveSq<disNormal> (std::initializer_list<disNormal> l);
 
 
 
+// Disable un-implemented distributions.
 template<typename T>
 probDistr* convolveSSqrt(std::initializer_list<T> l) = delete;
 
-// Sum of the square of Normal RVs; then take the sqrt of the sum.
-// R = sqrt(X**2 + Y**2 + Z**2 + ...)
+/**
+ * @brief Sum of the square of Normal RVs, then take the sqrt of the sum.
+ * 
+ * R = sqrt(X^2 + Y^2 + Z^2 + ...)
+ * 
+ * Requires Normal distributions' scale parameters to be One.
+ * Requires Normal distributions' scale parameters (ie, std deviation) to be identical.
+ */
 template<>
 probDistr* convolveSSqrt<disNormal> (std::initializer_list<disNormal> l);
 

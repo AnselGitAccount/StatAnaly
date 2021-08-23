@@ -7,7 +7,17 @@
 
 namespace statanaly {
 
-
+/**
+ * @brief Backend to FnDispatcher.
+ * 
+ * Reference: Modern C+ Design by Andrei Alexandrescu
+ * 
+ * @tparam BaseLhs 
+ * @tparam BaseRhs 
+ * @tparam ResultType 
+ * @tparam (*)(BaseLhs&, BaseRhs&)
+ * @see FnDispatcher 
+ */
 template <class BaseLhs,
 		class BaseRhs = BaseLhs,
 		typename ResultType = void,
@@ -40,6 +50,15 @@ private:
 };
 
 
+/**
+ * @brief Double Dispatcher.
+ * 
+ * Reference: Modern C+ Design by Andrei Alexandrescu
+ * 
+ * @tparam BaseLhs 
+ * @tparam BaseRhs 
+ * @tparam ResultType 
+ */
 template <class BaseLhs,
 		class BaseRhs = BaseLhs,
 		typename ResultType = void>
@@ -54,9 +73,11 @@ public:
 			bool symmetric=true>
 	void add() {
 		struct Local {
-            // A trampoline function is saved in the lookup table as the callback.
-            // The trampoline function has the concrete types information saved 
-            // during registration.
+			/**
+			 * @brief A trampoline function is saved in the lookup table as the callback.
+			 * 
+			 * The trampoline function has the concrete types information saved during registration.
+			 */
 			static ResultType Trampoline(BaseLhs& lhs, BaseRhs& rhs) {
 				return callback(
 						dynamic_cast<ConcreteLhs&>(lhs),

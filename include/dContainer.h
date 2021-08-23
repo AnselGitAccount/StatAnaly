@@ -8,14 +8,33 @@
 
 namespace statanaly {
 
-/* A container to store a collection of various distributions. */
-
+/**
+ * @brief Container class storing a collection of distributions.
+ * 
+ * This is the container for Mixture distribution. It stores a list of named distributions and their weight.
+ * When a distribution and its weight are inserted, the weights of existing distributions in the container are rebalanced.
+ * For example:
+ * 
+ * Inserting (Normal, weight=1) to 
+ * 
+ *      {(Uniform, weight=0.5) (Normal, weight=0.5)}.
+ * 
+ * After insertion and weight rebalancing:
+ * 
+ *      {(Uniform, weight=1/3) (Normal, weight=1/3) (Normal, weight=1/3)}
+ * 
+ * @param ingreds A collection of distribution and their weights.
+ * @see disMixture
+ */
 class dCtr {
     using weightType = double;
     
-    // Stores the list of named distribution functions that are the contents.
-    // The first weight value is the unnormalized weight.
-    // The second weight value is the normalized weight.
+    /**
+     * @brief Internal storage for the collection.
+     * 
+     * The first weight value is the unnormalized weight.
+     * The second weight value is the normalized weight.
+     */
     std::unordered_map<probDistr*, std::pair<weightType,weightType>> ingreds;
 
 public:
@@ -25,7 +44,7 @@ public:
         for (auto& [d,ws] : ingreds) {delete d;}
     };
 
-    // Copy constructor: deep-copy, do the same as clone().
+    /** Copy constructor: deep-copy, do the same as clone(). */
     dCtr(const dCtr& o) {
         // clone the named distribution.
         for (const auto& [d,w] : o.ingreds) {
@@ -33,7 +52,7 @@ public:
         }
     }
 
-    // Copy assignment: deep-copy
+    /** Copy assignment: deep-copy */
     dCtr& operator = (const dCtr& o) {
         // clone the named distribution.
         for (const auto& [d,w] : o.ingreds) {
@@ -42,13 +61,13 @@ public:
         return *this;
     };
     
-    // Move constructor
+    /** Move constructor */
     dCtr(dCtr&& o) {
         // Move the named distribution.
         ingreds = std::move(o.ingreds);
     }
 
-    // Move assignment
+    /** Move assignment */
     dCtr& operator = (dCtr&& o) {
         // Move the named distribution.
         ingreds = std::move(o.ingreds);
@@ -63,13 +82,14 @@ public:
         return new dCtr(*this);
     };
 
-    // Rescale weight distribution after named distribution insertion and deletion.
+    /** Rescale weight distribution after named distribution insertion and deletion. */
     void rescale() {
         weightType sum = 0;
         for (const auto& [d,ws] : ingreds) {sum += ws.first;}
         for (auto& [d,ws] : ingreds) {ws.second = (ws.first) / sum;}
     }
 
+    /** Insert a distribution and its weight */
     template<typename F, typename W>
     requires std::is_arithmetic_v<W>
     void insert(F&& distr, W weight) {
@@ -81,13 +101,14 @@ public:
         rescale();
     }
     
+    /** Insert a distribution and set its weight to one. */
     template<typename F>
     void insert(F&& distr) {
         // Default weight to 1.
-        insert( std::forward<F>(distr), 1);   // redirect
+        insert( std::forward<F>(distr), 1);
     }
 
-    // Find a distribution that match distr's hash (ie, type and parameters).
+    /** Find a distribution that match another distribution's hash (ie, type and parameters). */
     template<typename F>
     inline auto find(F&& distr) const {
         for (auto it = ingreds.begin(); it != ingreds.end(); it++) {
@@ -100,10 +121,16 @@ public:
     inline const auto end() const {return ingreds.end();}
     inline void clear() {ingreds.clear();}
 
+    /**
+     * @brief Computing the hash of this class instance.
+     * 
+     * Each containing distribution has a hash based on parameters of that distribution and distribution type.
+     * Two containers are equal when the hashes of containing distribution are equal.
+     * Note that insertion order of the ingredients does NOT matter.
+     * 
+     * @return std::size_t 
+     */
     inline std::size_t hash() const noexcept {
-        // Containers are different when the contents are different.
-        // Insertion order of the ingredients does NOT matter.
-
         std::vector<std::size_t> hashes;
         for (const auto& [d,w] : ingreds) {
             // Contents -- distribution parameters and distribution weight.
@@ -121,11 +148,20 @@ public:
         return seed;
     }
 
-    std::vector<std::vector<const probDistr*>> mapping() const {
-        /* map[0] is all of the base distributions;
-         * map[1] is all of the normal distributions;
-         * map[2] is all of the std uniform distributions;
-         * ... */
+    /**
+     * @brief Catelog the containing distributions by their type.
+     * 
+     * Any insertion order of the same set of probability distributions should return the same container.
+     * So their should return the same catelog.
+     * 
+     * map[0] is all of the base distributions;
+     * map[1] is all of the normal distributions;
+     * map[2] is all of the std uniform distributions;
+     * ...
+     * 
+     * @return std::vector<std::vector<const probDistr*>> 
+     */
+    std::vector<std::vector<const probDistr*>> catelog() const {
         std::vector<std::vector<const probDistr*>> map(
             static_cast<std::size_t>(dFuncID::COUNT), 
             std::vector<const probDistr*>{});
@@ -143,11 +179,17 @@ public:
         return map;
     }
 
-    // Print detail about this container.
-    // Print order might be different from insertion order.
+    /**
+     * @brief Print the detail of the container to STDOUT in a human-friendly format.
+     * 
+     * Print distributions in the order as they appear in the catelog. 
+     * So it might be different from insertion order.
+     * 
+     * @return std::ostream& 
+     */
     friend std::ostream& operator << (std::ostream&, const dCtr&);
     void print(std::ostream& output) const {
-        std::vector<std::vector<const probDistr*>> map = mapping();
+        std::vector<std::vector<const probDistr*>> map = catelog();
 
         output << "Container content : \n";
         for (const std::vector<const probDistr*>& ds : map) {
@@ -197,7 +239,11 @@ std::ostream& operator << (std::ostream&, const dCtr&);
 
 }   // namespace
 
-
+/**
+ * @brief STL hasher overload
+ * 
+ * @tparam Distribution container.
+ */
 template<>
 class std::hash<statanaly::dCtr> {
 public:

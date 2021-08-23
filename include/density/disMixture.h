@@ -19,6 +19,7 @@ namespace statanaly {
  * Variance of a mixture is computed via the Law of Total Variance.
  * 
  * @param ctr Container for a collection of distributions.
+ * @see dContainer
  */
 
 class disMixture : public probDistr {

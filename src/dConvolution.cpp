@@ -3,12 +3,25 @@
 
 namespace statanaly {
 
+/**
+ * @brief Global object for double dispacher that compute R = X + Y.
+ */
 FnDispatcher<probDistr,probDistr,probDistr*> cnvl;
+
+/**
+ * @brief Global object for double dispacher that compute R = X^2 + Y^2.
+ */
 FnDispatcher<probDistr,probDistr,probDistr*> cnvlSq;
+
+/**
+ * @brief Global object for double dispacher that compute R = sqrt(X^2 + Y^2).
+ */
 FnDispatcher<probDistr,probDistr,probDistr*> cnvlSSqrt;
 
 
-/* Register combinations for dispatches here. ----------- */
+/**
+ * @brief Register probability distribution pairs for R = X + Y.
+ */
 auto ConvolutionDoubleDispatcherInitialization = [](){
     cnvl.add<disStdUniform,disStdUniform,convolve>();
     cnvl.add<disNormal,disNormal,convolve>();
@@ -18,11 +31,17 @@ auto ConvolutionDoubleDispatcherInitialization = [](){
     return true;
 }();
 
+/**
+ * @brief Register probability distibution pairs for R = X^2 + Y^2. 
+ */
 auto ConvolutionSqDoubleDispatcherInitialization = [](){
     cnvlSq.add<disNormal,disNormal,convolveSq>();
     return true;
 }();
 
+/**
+ * @brief Register probability distibution pairs for R = sqrt(X^2 + Y^2).
+ */
 auto ConvolutionSSqrtDoubleDispatcherInitialization = [](){
     cnvlSSqrt.add<disNormal,disNormal,convolveSSqrt>();
     return true;
@@ -31,9 +50,7 @@ auto ConvolutionSSqrtDoubleDispatcherInitialization = [](){
 
 /* Callback functions for double dispatcher for Convolution. 
  * Because the argument types are concrete types, they can be called directly.
- *
- * Note: one can call those functions with concrete types directly 
- * (aka without callbacks). ---------------------------- */
+ */
 
 probDistr* convolve(disStdUniform& l, disStdUniform& r) {
     probDistr* res = new disIrwinHall(2);
@@ -68,24 +85,6 @@ probDistr* convolve(disExponential& l, disExponential& r) {
     return res;
 };
 
-probDistr* convolveSSqrt(disNormal& l, disNormal& r) {
-    // l's and r's variances must be identical.
-    if (l.stddev() != r.stddev())
-        throw std::invalid_argument("convolveSSqrt(Normal,Normal) requires Normal distributions' scale parameters to be identical.");
-
-    // If l's and r's means are zero, return Rayleigh distribution.
-    // Else, return Rician distribution.
-    probDistr* res = nullptr;
-    if (l.mean()==0 && r.mean()==0)
-        res = new disRayleigh(l.stddev());
-    else {
-        auto a = std::sqrt(l.mean()*l.mean() + r.mean()*r.mean());
-        res = new disRician(a, l.stddev());
-    }
-
-    return res;
-};
-
 probDistr* convolveSq(disNormal& l, disNormal& r) {
     // l's and r's variances must be equal one.
     if (l.stddev() != 1 || r.stddev() != 1)
@@ -99,6 +98,24 @@ probDistr* convolveSq(disNormal& l, disNormal& r) {
     else {
         auto a = l.mean()*l.mean() + r.mean()*r.mean();
         res = new disNcChiSq(2,a);
+    }
+
+    return res;
+};
+
+probDistr* convolveSSqrt(disNormal& l, disNormal& r) {
+    // l's and r's variances must be identical.
+    if (l.stddev() != r.stddev())
+        throw std::invalid_argument("convolveSSqrt(Normal,Normal) requires Normal distributions' scale parameters to be identical.");
+
+    // If l's and r's means are zero, return Rayleigh distribution.
+    // Else, return Rician distribution.
+    probDistr* res = nullptr;
+    if (l.mean()==0 && r.mean()==0)
+        res = new disRayleigh(l.stddev());
+    else {
+        auto a = std::sqrt(l.mean()*l.mean() + r.mean()*r.mean());
+        res = new disRician(a, l.stddev());
     }
 
     return res;
@@ -163,37 +180,13 @@ probDistr* convolve<disExponential> (std::initializer_list<disExponential> l) {
 };
 
 template<>
-probDistr* convolveSSqrt<disNormal> (std::initializer_list<disNormal> l) {
-    double mu  = l.begin()->p_location();
-    double sig = l.begin()->p_scale();
-    long double a = 0;
-    for (auto& e : l) {
-        if (1 != e.p_scale())
-            throw std::invalid_argument("ConvolveSSqrt({Normal_i}) requires Normal distributions' scale parameters to be One");
-        if (sig != e.p_scale())
-            throw std::invalid_argument("ConvolveSSqrt({Normal_i}) requires Normal distributions' scale parameters (ie, std deviation) to be identical.");
-        a += e.p_location()*e.p_location();
-    }
-
-    // If the Normal distributions' means are zero, then it is Central Chi.
-    // Else, then it is Non-central Chi.
-    probDistr* res = nullptr;
-    if (mu==0)
-        res = new disChi(l.size());
-    else 
-        res = new disNcChi(l.size(), sqrt(a));
-
-    return res;
-};
-
-template<>
 probDistr* convolveSq<disNormal> (std::initializer_list<disNormal> l) {
     double mu  = l.begin()->p_location();
     double sig = l.begin()->p_scale();
     long double a = 0;
     for (auto& e : l) {
         if (1 != e.p_scale())
-            throw std::invalid_argument("ConvolveSq({Normal_i}) requires Normal distributions' scale parameters to be One");
+            throw std::invalid_argument("ConvolveSq({Normal_i}) requires Normal distributions' scale parameters to be One.");
         if (sig != e.p_scale())
             throw std::invalid_argument("ConvolveSq({Normal_i}) requires Normal distributions' scale parameters (ie, std deviation) to be identical.");
         a += e.p_location()*e.p_location();
@@ -209,5 +202,29 @@ probDistr* convolveSq<disNormal> (std::initializer_list<disNormal> l) {
 
     return res;    
 }
+
+template<>
+probDistr* convolveSSqrt<disNormal> (std::initializer_list<disNormal> l) {
+    double mu  = l.begin()->p_location();
+    double sig = l.begin()->p_scale();
+    long double a = 0;
+    for (auto& e : l) {
+        if (1 != e.p_scale())
+            throw std::invalid_argument("ConvolveSSqrt({Normal_i}) requires Normal distributions' scale parameters to be One.");
+        if (sig != e.p_scale())
+            throw std::invalid_argument("ConvolveSSqrt({Normal_i}) requires Normal distributions' scale parameters (ie, std deviation) to be identical.");
+        a += e.p_location()*e.p_location();
+    }
+
+    // If the Normal distributions' means are zero, then it is Central Chi.
+    // Else, then it is Non-central Chi.
+    probDistr* res = nullptr;
+    if (mu==0)
+        res = new disChi(l.size());
+    else 
+        res = new disNcChi(l.size(), sqrt(a));
+
+    return res;
+};
 
 }   // namespace statanaly

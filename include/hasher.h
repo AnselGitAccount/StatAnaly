@@ -13,9 +13,14 @@ inline void combine_hash(std::size_t& seed, const T& val) noexcept {
 } // namespace statanaly
 
 
-// Specialized std::hash for std::tuple.
-// The std::tuple can have any number of arguments.
-// https://www.variadic.xyz/2018/01/15/hashing-stdpair-and-stdtuple/
+/**
+ * @brief STL hasher specialized for std::tuple.
+ * 
+ * std::tuple can have any number of arguments.
+ * https://www.variadic.xyz/2018/01/15/hashing-stdpair-and-stdtuple/
+ * 
+ * @tparam TupleArgs 
+ */
 template<class... TupleArgs>
 class std::hash<std::tuple<TupleArgs...>> {
 
