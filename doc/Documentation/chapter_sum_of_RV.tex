@@ -1,0 +1,157 @@
+\chapter{Sum of Random Variables of Probability Distribution}
+\label{ch:sum_rv}
+
+
+\section{List of supported sum $R = X + Y$}
+
+\subsection{Standard Uniform \& Standard Uniform (continuous)}
+    \begin{equation}
+        R = \sum_{i=1}^2 X_i \qquad 
+        X_i \sim \text{StdUniform}, \quad 
+        R \sim \text{Irwin-Hall}(2)
+    \end{equation}
+
+\subsection{Normal \& Normal}
+
+    \begin{equation}
+        R = \sum_{i=1}^2 X_i \qquad 
+        X_i \sim \text{Normal}(\mu_i,\sigma_i), \quad 
+        R \sim \text{Normal}\left(\sum _{i=1}^{2}\mu _{i},\sum _{i=1}^{2}\sigma _{i}^{2}\right)
+    \end{equation}
+
+\subsection{Cauchy \& Cauchy}
+
+    \begin{equation}
+        R = \sum_{i=1}^2 X_i \qquad 
+        X_i \sim \text{Cauchy}(m_i,b_i), \quad 
+        R \sim \text{Cauchy}\left(\sum _{i=1}^{2}m_{i},\sum _{i=1}^{2}b _{i}\right)
+    \end{equation}
+
+\subsection{Gamma \& Gamma}
+
+    \begin{equation}
+        R = \sum_{i=1}^2 X_i \qquad 
+        X_i \sim \text{Gamma}(\alpha_i,\theta), \quad 
+        R \sim \text{Gamma}\left(\sum _{i=1}^{2}\alpha_{i},\theta \right)
+    \end{equation}
+
+\subsection{Exponential \& Exponential}
+
+    \begin{equation}
+        R = \sum_{i=1}^2 X_i \qquad 
+        X_i \sim \text{Exponential}(\theta), \quad 
+        R \sim \text{Erlang}\left(2, \theta \right)
+    \end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{List of supported sum $R = X^2 + Y^2$}
+\subsection{Normal \& Normal}
+
+\begin{equation}
+    R = \sum_{i=1}^2 X_i^2 \qquad 
+    X_i \sim \text{Normal}(0,1), \quad 
+    R \sim \text{Chi-Squared}\left( 2 \right)
+\end{equation}
+
+\begin{equation}
+    R = \sum_{i=1}^2 X_i^2 \qquad 
+    X_i \sim \text{Normal}(\mu_i,1), \quad 
+    R \sim \text{Non-central Chi-Squared}\left(2, \sum _{i=1}^{2}\mu _{i}^2\right)
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{List of supported sum $R = \sqrt{X^2 + Y^2}$}
+\subsection{Normal \& Normal}
+
+\begin{equation}
+    R = \sqrt{ \sum_{i=1}^2 X_i^2 } \qquad 
+    X_i \sim \text{Normal}(0,\sigma^2), \quad 
+    R \sim \text{Rayleigh}\left( \sigma \right)
+\end{equation}
+
+\begin{equation}
+    R = \sqrt{ \sum_{i=1}^2 X_i^2 } \qquad 
+    X_i \sim \text{Normal}(\mu_i,\sigma^2), \quad 
+    R \sim \text{Rician}\left(\sqrt{\sum _{i=1}^{2}\mu _{i}^2}, \sigma \right)
+\end{equation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{List of supported sum $R = \sum_i X_i$}
+\subsection{Array of Standard Uniform}
+    \begin{equation}
+        R = \sum_{i=1}^n X_i \qquad 
+        X_i \sim \text{StdUniform}, \quad 
+        R \sim \text{Irwin-Hall}(n)
+    \end{equation}
+
+\subsection{Array of Normal}
+    \begin{equation}
+        R = \sum_{i=1}^n X_i \qquad 
+        X_i \sim \text{Normal}(\mu_i,\sigma_i), \quad 
+        R \sim \text{Normal}\left(\sum _{i=1}^{n}\mu _{i},\sum _{i=1}^{n}\sigma _{i}^{2}\right)
+    \end{equation}
+
+\subsection{Array of Cauchy}
+
+    \begin{equation}
+        R = \sum_{i=1}^n X_i \qquad 
+        X_i \sim \text{Cauchy}(m_i,b_i), \quad 
+        R \sim \text{Cauchy}\left(\sum _{i=1}^{n}m_{i},\sum _{i=1}^{n}b _{i}\right)
+    \end{equation}
+
+\subsection{Array of Gamma}
+
+    \begin{equation}
+        R = \sum_{i=1}^n X_i \qquad 
+        X_i \sim \text{Gamma}(\alpha_i,\theta), \quad 
+        R \sim \text{Gamma}\left(\sum _{i=1}^{n}\alpha_{i},\theta \right)
+    \end{equation}
+
+\subsection{Array of Exponential}
+
+    \begin{equation}
+        R = \sum_{i=1}^n X_i \qquad 
+        X_i \sim \text{Exponential}(\theta), \quad 
+        R \sim \text{Erlang}\left(n, \theta \right)
+    \end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{List of supported sum $R = \sum_i X_i^2$}
+\subsection{Array of Normal}
+
+\begin{equation}
+    R = \sum_{i=1}^n X_i^2 \qquad 
+    X_i \sim \text{Normal}(0,1), \quad 
+    R \sim \text{Chi-Squared}\left( n \right)
+\end{equation}
+
+\begin{equation}
+    R = \sum_{i=1}^n X_i^2 \qquad 
+    X_i \sim \text{Normal}(\mu_i,1), \quad 
+    R \sim \text{Non-central Chi-Squared}\left(2, \sum _{i=1}^{n}\mu _{i}^2\right)
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{List of supported sum $R = \sqrt{\sum_i X_i^2}$}
+\subsection{Array of Normal}
+
+\begin{equation}
+    R = \sqrt{ \sum_{i=1}^n X_i^2 } \qquad 
+    X_i \sim \text{Normal}(0,1), \quad 
+    R \sim \text{Chi}\left( n \right)
+\end{equation}
+
+\begin{equation}
+    R = \sqrt{ \sum_{i=1}^n X_i^2 } \qquad 
+    X_i \sim \text{Normal}(\mu_i,1), \quad 
+    R \sim \text{Non-central Chi} \left( 2, \sqrt{\sum _{i=1}^{n}\mu _{i}^2} \right)
+\end{equation}
+
+
+

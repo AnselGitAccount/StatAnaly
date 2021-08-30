@@ -1,0 +1,188 @@
+\section{Usage in C++}
+
+A good place to see example usages is the gtest files in the \textbf{tests} directory.
+
+Because all distribution classes are derived \(\code{probDistr}\) class in \(\code{probDistr.h}\), 
+their interfaces are the same. That is, you can call the following methods 
+in all probability distribution classes:
+\begin{enumerate}
+    \item pdf
+    \item cdf
+    \item mean
+    \item stddev
+    \item variance
+    \item skewness
+    \item hash
+    \item print
+    \item isEqual\_tol
+    \item isEqual\_ulp
+    \item getID
+\end{enumerate}
+
+In addition to the interface methods above, the Mixture distribution has some generic container methods.
+Please see \(\code{tests/unit_test/tst_disMixture.cpp}\) for reference.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{How to add a new probability distribution?}
+
+Since probability distribution classes inherit from \(\code{probDistr}\) class in \(\code{probDistr.h}\), 
+a new probability classes should implement:
+\begin{enumerate}
+    \item the pure virtual functions in \(\code{probDistr}\).
+    \item a hasher.
+    \item a cloner which duplicates an object that is raw or is managed by smart-pointer.
+    \item a serializer for human-friendly text to STDOUT.
+    \item two comparers with different type of thresholds -- floating-point values and ULPs.
+    \item a unique ID that identifies the distribution.
+\end{enumerate} 
+
+
+\begin{minted}{cpp}
+class probDistr {
+public:
+
+    virtual double pdf(const double=0) const    = 0;
+    virtual double cdf(const double=0) const    = 0;
+    virtual double mean() const                 = 0;
+    virtual double stddev() const               = 0;
+    virtual double variance() const             = 0;
+    virtual double skewness() const             = 0;
+    
+    virtual std::size_t hash() const noexcept {
+        std::size_t seed = 0;
+        combine_hash(seed, id);
+        return seed;
+    }
+
+    virtual std::unique_ptr<probDistr> cloneUnique() const = 0;
+    virtual probDistr* clone() const = 0;    // Return type can be Covariant.
+
+    friend std::ostream& operator << (std::ostream&, const probDistr&);
+    virtual void print(std::ostream&) const = 0;
+
+    virtual bool isEqual_tol(const probDistr&, const double) const = 0;
+    virtual bool isEqual_ulp(const probDistr&, const unsigned) const = 0;
+
+    virtual dFuncID getID() const {return id;};
+    const dFuncID id = dFuncID::BASE_DISTR;
+
+    ...
+}
+\end{minted}
+
+
+In addition, it is recommanded to implement those to align the feature set with existing distributions:
+\begin{enumerate}
+    \item getters for distribution parameters.
+    \item re-direct std::hash to call custome hasher.
+\end{enumerate}
+
+
+For example, below is my implementation of Rician distribution.
+
+\begin{minted}{cpp}
+class disRician : public probDistr {
+private:
+
+    double nu;      // distance
+    double sigma;   // scale
+
+public:
+    template<class T, class U>
+    requires std::is_arithmetic_v<T> && std::is_arithmetic_v<U> 
+    disRician(const T distance, const U scale) {
+        nu = std::abs(distance);
+        sigma = scale;
+    }
+    disRician() = delete;
+    ~disRician() = default;
+
+    double pdf(const double x) const override {
+        const double s2inv = 1/(sigma*sigma);
+        const double x_e = exp(-(x*x+nu*nu)*0.5*s2inv) * std::cyl_bessel_i(0,x*nu*s2inv);
+        return x * s2inv * x_e;
+    }
+
+    double cdf(const double x) const override {
+        const double s_inv = 1/sigma;
+        return 1 - marcumQ(1, nu*s_inv, x*s_inv);
+    }
+
+    double mean() const override {
+        const double x = -0.5*nu*nu/(sigma*sigma);
+        const double lague = exp(x/2) * 
+            ((1-x)*std::cyl_bessel_i(0,-0.5*x) - x*std::cyl_bessel_i(1,-0.5*x));
+        return sigma * SQRT_PI_2 * lague;
+    }
+
+    double stddev() const override {
+        return std::sqrt(variance());
+    }
+
+    double variance() const override {
+        const double x = -0.5*nu*nu/(sigma*sigma);
+        const double lague = exp(x/2) * 
+            ((1-x)*std::cyl_bessel_i(0,-0.5*x) - x*std::cyl_bessel_i(1,-0.5*x));
+        return 2*sigma*sigma + nu*nu - M_PI_2*sigma*sigma*lague*lague;
+    }
+
+    double skewness() const override {
+        throw std::runtime_error("Rician distribution's skewness is too complicated.");
+        return 0;
+    }
+
+    inline std::size_t hash() const noexcept {
+        std::size_t seed = 0;
+        combine_hash(seed, char(id));
+        combine_hash(seed, nu);
+        combine_hash(seed, sigma);
+        return seed;
+    } 
+
+    std::unique_ptr<probDistr> cloneUnique() const override {
+        return std::make_unique<disRician>(static_cast<disRician const&>(*this));
+    };
+
+    disRician* clone() const override {
+        return new disRician(*this);
+    }
+
+    void print(std::ostream& output) const override {
+        output << "Rician distribution -- nu = " << nu << " sigma = " << sigma;
+    }
+
+    bool isEqual_tol(const probDistr& o, const double tol) const override {
+        const disRician& oo = dynamic_cast<const disRician&>(o);
+        bool r = true;
+        r &= isEqual_fl_tol(nu, oo.nu, tol);
+        r &= isEqual_fl_tol(sigma, oo.sigma, tol);
+        return r;
+    }
+
+    bool isEqual_ulp(const probDistr& o, const unsigned ulp) const override {
+        const disRician& oo = dynamic_cast<const disRician&>(o);
+        bool r = true;
+        r &= isEqual_fl_ulp(nu, oo.nu, ulp);
+        r &= isEqual_fl_ulp(sigma, oo.sigma, ulp);
+        return r;
+    }
+
+    auto p_distance() const noexcept {
+        return nu;
+    }
+
+    auto p_scale() const noexcept {
+        return sigma;
+    }
+};
+
+template<>
+class std::hash<statanaly::disRician> {
+public:
+    std::size_t operator() (const statanaly::disRician& d) const {
+        return d.hash();
+    }
+};
+\end{minted}

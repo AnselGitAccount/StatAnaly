@@ -90,8 +90,8 @@ probDistr* convolveSq(disNormal& l, disNormal& r) {
     if (l.stddev() != 1 || r.stddev() != 1)
         throw std::invalid_argument("convolveSq(Normal,Normal) requires Normal distributions' scale parameters to be one.");
 
-    // If l's and r's means are zero, return central chi distribution.
-    // Else, return noncentral chi distribution.
+    // If l's and r's means are zero, return central chi squared distribution.
+    // Else, return noncentral chi squared distribution.
     probDistr* res = nullptr;
     if (l.mean()==0 && r.mean()==0)
         res = new disChiSq(2);

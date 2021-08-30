@@ -1,0 +1,43 @@
+\documentclass[12pt]{report}
+\usepackage[left=1cm,top=2cm,bottom=2cm,right=1cm]{geometry}
+
+% Reference:
+% https://www.dickimaw-books.com/latex/thesis/html/include.html
+
+\usepackage{mathrsfs} 
+\usepackage[colorlinks=true,urlcolor=cyan,linkcolor=blue]{hyperref}
+\usepackage{pdfpages}
+\usepackage{amsmath,amssymb}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{minted}
+
+\setminted{linenos=true,linenos=true,frame=single,framesep=10pt,fontsize=\small}
+
+\newcommand{\code}[1]{\it{#1}}
+
+
+\title{StatAnaly \\
+        \large A Statistical Analysis Package}
+\author{Ansel Blumers}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+\tableofcontents{}
+
+\include{chapter_intro}
+
+\include{chapter_distributions}
+\include{section_prob_distribution_usage}
+
+
+\include{chapter_sum_of_RV}
+
+
+
+%\includepdf[pages=-]{sample.pdf}
+
+\end{document}

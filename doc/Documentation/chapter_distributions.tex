@@ -1,0 +1,568 @@
+\chapter{Probability Distribution}
+\label{ch:prob_distr}
+
+\section{List of supported probability distributions}
+A list of supported probability distributions in alphabetical order.
+
+\begin{enumerate}
+    \item Cauchy distribution
+    \item Chi distribution
+    \item Chi Squared distribution
+    \item Erlang distribution
+    \item Exponential distribution
+    \item Gamma distribution
+    \item Irwin-Hall distribution
+    \item Non-central Chi distribution
+    \item Non-central Chi Squared distribution
+    \item Normal distribution
+    \item Rayleigh distribution
+    \item Standard Normal distribution
+    \item Uniform distribution (Continuous)
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Cauchy distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x) = \frac{1}{\pi} \frac{b}{(x-m)^2 + b^2}
+\]
+where $b$ is the scale parameter which specifies the half-width at half-maximum; 
+$m$ is the location parameter which specifies the location of the peak of the distribution.
+
+\subsubsection*{CDF}
+\[
+    D(x) = \frac{1}{\pi} \arctan{(\frac{x-m}{b})} + \frac{1}{2}
+\]
+
+\subsubsection*{Mean}
+\[
+    \text{Undefined}
+\]
+
+\subsubsection*{Variance}
+\[
+    \text{Undefined}
+\]
+
+\subsubsection*{Skewness}
+\[
+    \text{Undefined}
+\]
+
+Reference:
+\href{https://mathworld.wolfram.com/CauchyDistribution.html}{WolframMathWorld}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Chi distribution} 
+
+\subsubsection*{PDF}
+\[
+    P(x) = \frac{2^{1-k/2} x^{k-1} \exp{(-x^2/2)}}{\Gamma(k/2)}
+\]
+where $k$ is the degrees of freedom.
+
+\subsubsection*{CDF}
+\[
+    D(x) = P(k/2, x^2/2)
+\]
+where $P(a,b)$ is the regularized gamma function.
+
+\subsubsection*{Mean}
+\[
+    \mu = \sqrt{2} \frac{\Gamma((k+1)/2)}{\Gamma(k/2)}
+\]
+
+\subsubsection*{Variance}
+\[
+    \sigma^2 = k-\mu^2
+\]
+
+\subsubsection*{Skewness}
+\[
+    \frac{\mu}{\sigma^3} (1-2\sigma^2)
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Chi_distribution}{Wikipedia}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Chi Squared distribution}
+
+A Chi Squared distribution with $k$ degrees of freedom is the 
+distribution of a sum of the squares of $k$ independent 
+standard normal random variables.
+
+\subsubsection*{PDF}
+\[
+    P(x) = \frac{x^{k/2-1} \exp(-x/2)}{2^{k/2} \Gamma(k/2)}
+\]
+where $k$ is the degrees of freedom; $\Gamma(a)$ is the gamma function.
+
+\subsubsection*{CDF}
+\[
+    D(x) = P(k/2, x/2)
+\]
+where $P(a,b)$ is the regularized gamma function.
+
+\subsubsection*{Mean}
+\[
+    \mu = k
+\]
+
+\subsubsection*{Variance}
+\[
+    2k
+\]
+
+\subsubsection*{Skewness}
+\[
+    \sqrt{8/k}
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Chi-squared_distribution}{Wikipedia}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Erlang distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x) = \frac{\lambda^k x^{k-1} \exp{(\lambda x)}}{(k-1)!}
+\]
+where $k$ is the shape parameter; $\lambda$ is the rate parameter.
+
+\subsubsection*{CDF}
+\[
+    D(x) = \frac{\gamma(k, \lambda x)}{(k-1)!}
+\]
+where $\gamma(a,b)$ is the lower gamma function.
+
+\subsubsection*{Mean}
+\[
+    \frac{k}{\lambda}
+\]
+
+\subsubsection*{Variance}
+\[
+    \frac{k}{\lambda^2}
+\]
+
+\subsubsection*{Skewness}
+\[
+    \frac{2}{\sqrt{k}}
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Erlang_distribution}{Wikipedia}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Exponential distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x) = \begin{cases} 
+        \lambda \exp{(-\lambda x)} & x\geq 0,\\
+        0 & x<0.
+        \end{cases}
+\]
+
+\subsubsection*{CDF}
+\[
+    D(x) = \begin{cases}
+        1-\exp{(-\lambda x)} & x \ge 0, \\
+        0 & x < 0.
+        \end{cases}
+\]
+
+\subsubsection*{Mean}
+\[
+    \frac{1}{\lambda}
+\]
+
+\subsubsection*{Variance}
+\[
+    \frac{1}{\lambda^2}
+\]
+
+\subsubsection*{Skewness}
+\[
+    2
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Exponential_distribution}{Wikipedia}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Gamma distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x)= \frac{1}{\Gamma(\alpha)\theta^{\alpha}} 
+            x^{\alpha-1} \exp{(-\frac{x}{\theta})}
+\]
+where $\alpha$ is the shape parameter; $\theta$ is the scale parameter.
+
+\subsubsection*{CDF}
+\[
+    D(x)= \frac{1}{\Gamma(\alpha)} \gamma(\alpha, \frac{x}{\theta})
+\]
+
+\subsubsection*{Mean}
+\[
+    k \theta
+\]
+
+\subsubsection*{Variance}
+\[
+    k \theta^2
+\]
+
+\subsubsection*{Skewness}
+\[
+    \frac{2}{\sqrt(\alpha)}
+\]
+
+Reference:
+\href{https://mathworld.wolfram.com/GammaDistribution.html}{WolframMathWorld}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Irwin-Hall distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x) = \frac{1}{(n-1)!} \sum_{{k=0}}^{{\lfloor x\rfloor }}
+        (-1)^{k}{\binom{n}{k}}(x-k)^{{n-1}}
+\]
+where $n$ is number of IDD of uniform distributions.
+
+\subsubsection*{CDF}
+\[
+    D(x) = \frac{1}{n!} \sum_{{k=0}}^{{\lfloor x\rfloor}}
+        (-1)^{k}{\binom{n}{k}}(x-k)^{n}
+\]
+
+\subsubsection*{Mean}
+\[
+    \frac{n}{2}
+\]
+
+\subsubsection*{Variance}
+\[
+    \frac{n}{12}
+\]
+
+\subsubsection*{Skewness}
+\[
+    0
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Irwin%E2%80%93Hall_distribution}{WolframMathWorld}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Non-central Chi distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x) = {\frac{\exp{(-(x^{2}+\lambda^{2})/2)}x^{k}\lambda}
+        {(\lambda x)^{k/2}}}
+        I_{k/2-1}(\lambda x)
+\]
+where $k$ is the degrees of freedom; $\lambda$ is the distance parameter;
+$I_M(a)$ is a modified cylindrical Bessel function of the first kind.
+
+\subsubsection*{CDF}
+\[
+    D(x) = 1-Q_{\frac {k}{2}}\left(\lambda ,x\right)
+\]
+where $Q_M(a,b)$ is Marcum Q-function.
+
+\subsubsection*{Mean}
+\[
+    \text{To be implemented.}
+\]
+
+\subsubsection*{Variance}
+\[
+    \text{To be implemented.}
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Noncentral_chi_distribution}{Wikipedia}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Non-central Chi Squared distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x) = {\frac {1}{2}}e^{-(x+\lambda )/2}\left({\frac {x}{\lambda }}\right)
+    ^{k/4-1/2}I_{k/2-1}({\sqrt {\lambda x}})
+\]
+where $k$ is the degrees of freedom; $\lambda$ is the distance parameter;
+
+\subsubsection*{CDF}
+\[
+    D(x) = 1-Q_{\frac {k}{2}}\left({\sqrt {\lambda }},{\sqrt {x}}\right)
+\]
+where $Q_M(a,b)$ is Marcum Q-function.
+
+\subsubsection*{Mean}
+\[
+    k + \lambda
+\]
+
+\subsubsection*{Variance}
+\[
+    2(k+2\lambda)
+\]
+
+\subsubsection*{Skewness}
+\[
+    \frac{2^{3/2}(k+3\lambda)}{(k+2\lambda)^{3/2}}
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Noncentral_chi-squared_distribution}{Wikipedia}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Normal distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x) = {\frac{1}{\sigma{\sqrt {2\pi }}}}
+        \exp{(-{\frac {1}{2}} 
+        \left({\frac {x-\mu }{\sigma }}\right)^{2})}
+\]
+where $\mu$ is the expection of the distribution; 
+$\sigma$ is the standard deviation.
+
+\subsubsection*{CDF}
+\[
+    D(x) = {\frac{1}{2}} \left[1+\operatorname {erf} 
+        \left({\frac {x-\mu }{\sigma {\sqrt {2}}}}\right)\right]
+\]
+where $erf(a)$ is the error function.
+
+\subsubsection*{Mean}
+\[
+    \mu
+\]
+
+\subsubsection*{Variance}
+\[
+    \sigma^2
+\]
+
+\subsubsection*{Skewness}
+\[
+    0
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Normal_distribution}{Wikipedia}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Rayleigh distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x) = {\frac {x}{\sigma ^{2}}}e^{-x^{2}/\left(2\sigma ^{2}\right)}
+\]
+
+\subsubsection*{CDF}
+\[
+    D(x) = 1 - e^{-x^{2}/\left(2\sigma ^{2}\right)}
+\]
+
+\subsubsection*{Mean}
+\[
+    \sigma \sqrt{\frac{\pi}{2}}
+\]
+
+\subsubsection*{Variance}
+\[
+    {\frac {4-\pi }{2}}\sigma ^{2}
+\]
+
+\subsubsection*{Skewness}
+\[
+    {\frac {2{\sqrt {\pi }}(\pi -3)}{(4-\pi )^{3/2}}}
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Rayleigh_distribution}{Wikipedia}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Standard Normal distribution}
+
+\subsubsection*{PDF}
+\[
+    P(x) = \frac{1}{\sqrt {2\pi }}
+        \exp{(-{\frac {1}{2}} x^{2})}
+\]
+where $\mu$ is the expection of the distribution; 
+$\sigma$ is the standard deviation.
+
+\subsubsection*{CDF}
+\[
+    D(x) = {\frac{1}{2}} \left[1+\operatorname {erf} 
+        \left( {\frac{x}{{\sqrt {2}}}} \right) \right]
+\]
+where $\operatorname {erf}(a)$ is the error function.
+
+\subsubsection*{Mean}
+\[
+    0
+\]
+
+\subsubsection*{Variance}
+\[
+    1
+\]
+
+\subsubsection*{Skewness}
+\[
+    0
+\]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Uniform distribution (Continuous)}
+
+\subsubsection*{PDF}
+\[
+    P(x) = \begin{cases}
+        {\frac {1}{b-a}}&{\text{for }}x\in [a,b]\\
+        0&{\text{otherwise}}
+    \end{cases}
+\]
+where $a$ is the lower bound; $b$ is the upper bound.
+
+\subsubsection*{CDF}
+\[
+    D(x) = \begin{cases}
+        0&{\text{for }}x<a\\
+        {\frac {x-a}{b-a}}&{\text{for }}x\in [a,b]\\
+        1&{\text{for }}x>b
+    \end{cases}
+\]
+
+\subsubsection*{Mean}
+\[
+    \frac{1}{2}(a+b)
+\]
+
+\subsubsection*{Variance}
+\[
+    \frac{1}{12}(b-a)^2
+\]
+
+\subsubsection*{Skewness}
+\[
+    0
+\]
+
+Reference:
+\href{https://en.wikipedia.org/wiki/Continuous_uniform_distribution}{Wikipedia}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Mixture distribution}
+
+A \textbf{mixture distribution} is the probability distribution of a random variable 
+that is derived from a collection of other random varibales. 
+The probability density function (and the cumulative distribution function) 
+can be expressed as the a convex combination of other distribution functions.
+The individual distributions that are combined to form the mixture distribution are called 
+the \textbf{mixture components}. The weights associated with each component are called the \textbf{mixture weights}.
+(\href{https://www.overleaf.com/learn/latex/Bold,_italics_and_underlining}{Wikipedia})
+
+
+\subsubsection*{PDF}
+Given the mixture components' PDF ${P_1(x), ..., P_n(x)}$ and weights ${w_1,...,w_n}$,
+the mixture's PDF is a convex combination:
+\[
+    P_\text{mixture}(x) = \sum^n_{i=1} w_i P_i(x)
+\]
+
+\subsubsection*{CDF}
+Given the mixture components' CDF ${D_1(x), ..., D_n(x)}$ and weights ${w_1,...,w_n}$,
+the mixture's CDF is a convex combination:
+\[
+    D_\text{mixture}(x) = \sum^n_{i=1} w_i D_i(x)
+\]
+
+
+The moments of a mixture distribution are not as mathematically simple as PDF or CDF. 
+To acquire the mathematically expressions for Mean, Variance, and Skewness, we need to 
+clarify the three types of moments:
+\begin{enumerate}
+    \item $k^\text{th}$ non-central moment: $\mu^{(k)} = \mathbb{E}[x^k]$
+    \item $k^\text{th}$ central moment: $\mu^{(k)}_c = \mathbb{E}[(x-\mu^{(1)})^k]$
+    \item $k^\text{th}$ standardized moment: $\mu^{(k)}_s = \mathbb{E}[(\frac{x-\mu^{(1)}}{\sigma})^k]$
+\end{enumerate}
+, where $^{(k)}$ denotes the $k^\text{th}$ moment.
+
+
+
+\subsubsection*{Mean}
+Mean is also known as the first non-central moment. 
+The $k^\text{th}$ non-central moment of a random variable can be rewritten in terms of integrals as:
+\begin{align}
+    \mu^{(k)} &= \mathbb{E}[x^k] \\
+              &= \int_{-\infty}^{\infty} x^k f(x) dx \\
+              &= \int_{-\infty}^{\infty} x^k \sum^n_{i=1} w_i f_i(x) dx \\
+              &= \sum^n_{i=1} w_i \int_{-\infty}^{\infty} x^k f_i(x) dx \\
+              &= \sum^n_{i=1} w_i \mathbb{E}_{f_i}[x^k] \\
+              &= \sum^n_{i=1} w_i \mu_i^{(k)}
+\end{align}
+, where $\mu_i^{(k)}$ is the $k^\text{th}$ non-central moment of distribution function $f_i$.
+
+Given the mixture components' mean ${\mu_1, ..., \mu_n}$ and weights ${w_1,...,w_n}$,
+it is easy to see the mixture's mean is just a convex combination:
+\[
+    \mu^{(1)}_\text{mixture} = \sum^n_{i=1} w_i \mu^{(1)}_i
+\]
+
+
+
+\subsubsection*{Variance}
+Variance is also known as the second central moment. The $k^\text{th}$ central moment 
+follows a deriavation similar to the non-central moment:
+\begin{align}
+    \sigma^2 \coloneqq \mu^{(2)}_c &= \mathbb{E}[(x-\mu^{(1)})^{2}] \\
+        &= \mathbb{E}[x^2] - (\mathbb{E}[x])^2 \\
+        &= \mu^{(2)} - (\mu^{(1)})^2 \\
+        &= \sum^n_{i=1} w_i \mu^{(2)}_i - \left(\sum^n_{i=1} w_i \mu^{(1)}_i \right)^2  \\
+        &= \sum^n_{i=1} w_i \left( \sigma^2_i + (\mu^{(1)}_i)^2 \right) - \left(\sum^n_{i=1} w_i \mu^{(1)}_i \right)^2  \\
+        &= \sum^n_{i=1} w_i \sigma^2_i + \sum^n_{i=1} w_i (\mu^{(1)}_i)^2 - \left(\sum^n_{i=1} w_i \mu^{(1)}_i \right)^2 
+\end{align}
+, where $\sigma_i^2$ is $i^{th}$ component's variance, and $\mu^{(1)}_i$ is $i^{th}$ component's mean.
+
+With simplified the notations, we get a familiar expression for the mixture's variance.
+\[
+    \sigma^2_\text{mixture} = \sum^n_{i=1} w_i (\sigma^2_i+\mu^2_i) - \mu^2_\text{mixture}
+\]
+
+
+
+\subsubsection*{Skewness}
+Skewness is also known as the third standardized moment. 
+\begin{align}
+    \mu^{(3)}_s &= \mathbb{E}[ \left( \frac{x-\mu^{(1)}}{\sigma} \right) ^3] \\
+                &= \frac{\mathbb{E}[x^3] - 3 \mu^{(1)} \mathbb{E}[x^2] + 3 (\mu^{(1)})^2 \mathbb{E}[x] - (\mu^{(1)})^3}{\sigma^3} \\
+                &= \frac{\mathbb{E}[x^3] - 3 \mu^{(1)} \sigma^2 - (\mu^{(1)})^3}{\sigma^3} 
+\end{align}
+
+To rewrite it in terms of the skewness of each component $(\mu^{(3)}_s)_i$, let's start by rewriting the third non-central moment:
+\[
+    \mathbb{E}[x^3] = \sum^n_{i=1} w_i \mu^{(3)}_i = \sum^n_{i=1} w_i \left( \sigma^3_i (\mu^{(3)}_s)_i + 3 \mu^{(1)}_i \sigma^2_i + (\mu^{(1)}_i)^3 \right)
+\]
+
+Now the Skewness of the mixture can be rewritten to:
+\[
+    \mu^{(3)}_s = \frac{ \sum^n_{i=1} w_i \left( \sigma^3_i (\mu^{(3)}_s)_i + 3 \mu^{(1)}_i \sigma^2_i + (\mu^{(1)}_i)^3 \right)  - 3 \mu^{(1)} \sigma^2 - (\mu^{(1)})^3 }{\sigma^3}
+\]
+where $\mu^{(1)}$ is the mean of the mixture, and $\sigma^2$ is the variance of the mixture.

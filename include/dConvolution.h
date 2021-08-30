@@ -104,7 +104,7 @@ probDistr* convolve(std::initializer_list<T> l) = delete;
 /**
  * @brief Sum of Standard Uniform RVs.
  * 
- * R = X + Y
+ * R = X + Y + Z + ...
  */
 template<>
 probDistr* convolve<disStdUniform> (std::initializer_list<disStdUniform> l);
@@ -112,7 +112,7 @@ probDistr* convolve<disStdUniform> (std::initializer_list<disStdUniform> l);
 /**
  * @brief Sum of Normal RVs.
  * 
- * R = X + Y
+ * R = X + Y + Z + ...
  */
 template<>
 probDistr* convolve<disNormal> (std::initializer_list<disNormal> l);
@@ -120,7 +120,7 @@ probDistr* convolve<disNormal> (std::initializer_list<disNormal> l);
 /**
  * @brief Sum of Cauchy RVs.
  * 
- * R = X + Y
+ * R = X + Y + Z + ...
  */
 template<>
 probDistr* convolve<disCauchy> (std::initializer_list<disCauchy> l);
@@ -128,7 +128,7 @@ probDistr* convolve<disCauchy> (std::initializer_list<disCauchy> l);
 /**
  * @brief Sum of Gamma RVs.
  * 
- * R = X + Y
+ * R = X + Y + Z + ...
  * Requires Gamma distributions' scale parameters to be identical.
  */
 template<>
@@ -138,7 +138,7 @@ probDistr* convolve<disGamma> (std::initializer_list<disGamma> l);
 /**
  * @brief Sum of Exponential RVs.
  * 
- * R = X + Y
+ * R = X + Y + Z + ...
  * Requires Exponential distributions' rate parameters to be identical.
  */
 template<>

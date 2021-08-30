@@ -32,7 +32,7 @@ public:
     }
 
     double cdf(const double x) const override {
-        const double lgf = regLowerGamma(k/2.0, x/2);
+        const double lgf = regLowerGamma(k/2.0, x/2.0);
         return lgf;
     }
 

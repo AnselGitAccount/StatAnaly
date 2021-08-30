@@ -15,8 +15,8 @@ namespace statanaly {
 
 class disErlang : public probDistr {
 private:
-    unsigned k;     // shape
-    double lambda;  // rate
+    unsigned k;
+    double lambda;
 
 public:
     template<typename T, typename P>
