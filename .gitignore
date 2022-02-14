@@ -4,3 +4,7 @@ build
 lib
 doc/html
 doc/latex
+doc/Documentation/_minted-doc
+doc/Documentation/*.aux
+doc/Documentation/doc.*
+!doc/Documentation/*.tex

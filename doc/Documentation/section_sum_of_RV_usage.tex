@@ -1,0 +1,102 @@
+\section{Usage in C++}
+
+A good place to see example usages is the gtest files \textit{tests/tst\_dConvolution.cpp} \\
+and \textit{tests/tst\_dConvolution\_squares.cpp}.
+
+There are three global static variables representing different sums:
+\begin{enumerate}
+    \item \(\it{cnvl}\) represents the simple sum, ie $R=X+Y$.
+    \item \(\it{cnvlSq}\) represents the sum of the squares, ie $R=X^2+Y^2$.
+    \item \(\it{cnvlSSqrt}\) represents the sum of the squares and then take square root, ie $R=\sqrt{X^2+Y^2}$.
+\end{enumerate}
+
+
+\subsection{Simple Sum}
+
+\subsubsection*{Example 1}
+The sum of two RVs of standard uniform distributions is a RV of Irwin-Hall distribution.
+
+\begin{minted}{cpp}
+disStdUniform su1{}, su2{};
+probDistr* rsu = cnvl.go(su1, su2);
+disIrwinHall* rih = dynamic_cast<disIrwinHall*>(rsu);
+\end{minted}
+
+\subsubsection*{Example 2}
+The sum of an array of RVs of standard uniform distributions is a RV of Irwin-Hall distribution.
+
+\begin{minted}{cpp}
+disStdUniform su1{}, su2{}, su3{}, su4{};
+probDistr* rsu = convolve<disStdUniform>({su1, su2, su3, su4});
+disIrwinHall* rih = dynamic_cast<disIrwinHall*>(rsu);
+\end{minted}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Sum of the Squares}
+
+\subsubsection*{Example}
+The sum of two squares of RVs of normal distributions is a RV of Chi Square distribution.
+
+\begin{minted}{cpp}
+disNormal a(0,1);
+disNormal b(0,1);
+disChiSq s = *static_cast<disChiSq*>(cnvlSq.go(a,b));
+\end{minted}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Sum of the Squares, and Then Take Square Root}
+
+\subsubsection*{Example}
+The sum of two squares of RVs of normal distribution (with same variance) is a RV of Rician distribution.
+
+\begin{minted}{cpp}
+disNormal a(2,9);
+disNormal b(3,9);
+disRician s = *static_cast<disRician*>(cnvlSSqrt.go(a,b));
+\end{minted}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{How to add a new sum of random variables?}
+
+If you do not find your distributions in currenctly supported list, you can easily add a new sum for your random variables.
+
+... is implemented in the double dispatcher pattern. (See \textit{Modern C++ Design by Andrei Alexandrescu} for pattern detail.)
+
+TBW
+
+
+
+\begin{enumerate} 
+    \item Register the pair in \textit{dConvolution.cpp}.
+    \item Write a function prototype in \textit{dConvolution.h}.
+    \item Implement the sum in \textit{dConvolution.cpp}.
+\end{enumerate}
+
+\begin{minted}{cpp}
+/* dConvolution.cpp */
+
+auto ConvolutionSqDoubleDispatcherInitialization = [](){
+    cnvlSq.add<disNormal,disNormal,convolveSq>();
+    cnvlSq.add<disApple,disBananna,convolveSq>();  // new distribution pair.
+    return true;
+}();
+
+probDistr* convolve(disApple& l, disBananna& r) {
+    // Implement the sum
+    // Blah, blah, blah 
+    probDistr* res = xxxxx;
+    return res;
+};
+\end{minted}
+
+
+\begin{minted}{cpp}
+/* dConvolution.h */
+
+probDistr* convolve(disCauchy& lhs, disCauchy& rhs);
+\end{minted}

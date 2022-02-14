@@ -18,7 +18,7 @@
 namespace statanaly {
 
 TEST( dConvolution, two_StdUniform ) {
-    /* a standard uniform + a standard uniform --> IrwinHall */
+    /* standard uniform + standard uniform --> IrwinHall */
 
     disStdUniform su1{}, su2{};
     probDistr* rsu = cnvl.go(su1, su2);
@@ -50,7 +50,7 @@ TEST( dConvolution, list_StdUniform ) {
 
 
 TEST( dConvolution, two_Normal ) {
-    /* a normal + a normal --> normal */
+    /* normal + normal --> normal */
 
     disNormal n1{1,2}, n2{2,1};
     probDistr* rn = cnvl.go(n1,n2);
@@ -78,7 +78,7 @@ TEST( dConvolution, list_Normal ) {
 
 
 TEST( dConvolution, two_Cauchy ) {
-    /* a cauchy + a cauchy --> cauchy */
+    /* cauchy + cauchy --> cauchy */
 
     disCauchy n1{1,2}, n2{2,1};
     probDistr* rn = cnvl.go(n1,n2);
@@ -107,7 +107,7 @@ TEST( dConvolution, list_Cauchy ) {
 };
 
 TEST( dConvolution, two_Gamma ) {
-    /* a Gamma + a Gamma --> Gamma */
+    /* Gamma + Gamma --> Gamma */
 
     disGamma n1{1,2}, n2{1,1};
     probDistr* rn = cnvl.go(n1,n2);
@@ -137,7 +137,7 @@ TEST( dConvolution, list_Gamma ) {
 
 
 TEST( dConvolution, two_Exponential ) {
-    /* a Exponential + a Exponential --> Exponential */
+    /* Exponential + Exponential --> Exponential */
 
     disExponential n1{4}, n2{4};
     probDistr* rn = cnvl.go(n1,n2);
