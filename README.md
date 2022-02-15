@@ -19,7 +19,7 @@ There are three global static variables representing different sums:
 
 The sum of two RVs of standard uniform distributions is a RV of Irwin-Hall distribution.
 
-``` cpp
+```cpp
 disStdUniform su1{}, su2{};
 probDistr* rsu = cnvl.go(su1, su2);
 disIrwinHall* rih = dynamic_cast<disIrwinHall*>(rsu);
@@ -27,7 +27,7 @@ disIrwinHall* rih = dynamic_cast<disIrwinHall*>(rsu);
 
 The sum of an array of RVs of standard uniform distributions is a RV of Irwin-Hall distribution.
 
-``` cpp
+```cpp
 disStdUniform su1{}, su2{}, su3{}, su4{};
 probDistr* rsu = convolve<disStdUniform>({su1, su2, su3, su4});
 disIrwinHall* rih = dynamic_cast<disIrwinHall*>(rsu);
@@ -37,7 +37,7 @@ disIrwinHall* rih = dynamic_cast<disIrwinHall*>(rsu);
 
 The sum of two squares of RVs of normal distributions is a RV of Chi Square distribution.
 
-``` cpp
+```cpp
 disNormal a(0,1);
 disNormal b(0,1);
 disChiSq s = *static_cast<disChiSq*>(cnvlSq.go(a,b));
@@ -47,7 +47,7 @@ disChiSq s = *static_cast<disChiSq*>(cnvlSq.go(a,b));
 
 The sum of two squares of RVs of normal distribution (with same variance) is a RV of Rician distribution.
 
-``` cpp
+```cpp
 disNormal a(2,9);
 disNormal b(3,9);
 disRician s = *static_cast<disRician*>(cnvlSSqrt.go(a,b));
@@ -67,7 +67,7 @@ The building and testing of the package require the following FOSS:
 
 Make a build directory, and then compile the source codes.
 
-``` bash
+```bash
     mkdir build
     cd build/
     cmake ../
@@ -79,7 +79,7 @@ Make a build directory, and then compile the source codes.
 
 A main function (in *playground.cpp*) is provided as a playground for experimentation. To build the executable:
 
-``` bash
+```bash
     mkdir build
     cd build/
     cmake ../
@@ -91,7 +91,7 @@ A main function (in *playground.cpp*) is provided as a playground for experiment
 
 StatAnaly follows a test-driven development mindset. Unit tests are provided to ensure numerical accurarcy. StatAnaly supports CTest testing framework.
 
-``` bash
+```bash
     mkdir build
     cd build/
     cmake ../
@@ -104,7 +104,7 @@ StatAnaly follows a test-driven development mindset. Unit tests are provided to 
 
 Install static library in */usr/local/lib/StatAnaly_x.x* and header files in */usr/local/include/StatAnaly_x.x*. Installation may require *sudo* privilege.
 
-``` bash
+```bash
     mkdir build
     cd build/
     cmake ../
@@ -116,7 +116,7 @@ Install static library in */usr/local/lib/StatAnaly_x.x* and header files in */u
 
 Source code is commented in a Doxygen recognizable style.
 
-``` bash
+```bash
     doxygen doc/Doxyfile
     firefox doc/html/index.html
 ```
