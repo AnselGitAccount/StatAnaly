@@ -60,7 +60,7 @@ public:
         const double x = -0.5*nu*nu/(sigma*sigma);
         const double lague = exp(x/2) * 
             ((1-x)*std::cyl_bessel_i(0,-0.5*x) - x*std::cyl_bessel_i(1,-0.5*x));
-        return sigma * SQRT_PI_2 * lague;
+        return sigma * SACV_SQRT_PI_2 * lague;
     }
 
     double stddev() const override {

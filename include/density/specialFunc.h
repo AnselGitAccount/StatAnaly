@@ -22,14 +22,16 @@
 #include <cmath>
 #include <cstdio>
 #include <stdexcept>
-#include "const_values.h"
 
 namespace statanaly {
 
 /* Special Constants ---------------------------------- */
 
+/** ln(sqrt(2*pi)) **/
+constexpr double SACV_LOG_SQRT_2PI = 0.91893853320467266954;
+
 /** sqrt(pi/2) */
-constexpr double SQRT_PI_2 = M_PI_2 * M_2_SQRTPI * M_SQRT1_2;   
+constexpr double SACV_SQRT_PI_2 = M_PI_2 * M_2_SQRTPI * M_SQRT1_2;   
 
 
 /** @brief Generate factorials.
