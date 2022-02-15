@@ -156,7 +156,7 @@ write_basic_package_version_file(
 # Copies the resulting CMake config files to the installed library directory
 install(
     FILES 
-        "cmake/StatAnaly-config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/StatAnaly-config.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/StatAnalyConfigVersion.cmake"
     DESTINATION ${StatAnaly_LIB_DEST}
     )
