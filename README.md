@@ -121,9 +121,13 @@ Source code is commented in a Doxygen recognizable style.
     firefox doc/html/index.html
 ```
 
+## PDF Documentation
+
+See full documentation -- *doc/Documentation/doc.pdf*.
+
 ## Author
 
-StatAnaly is solely developed by Ansel Blumers.
+StatAnaly is solely developed by Ansel Blumers (mailto: ansel.blumers@gmail.com).
 
 ## Copyright
 

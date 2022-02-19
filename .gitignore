@@ -8,3 +8,4 @@ doc/Documentation/_minted-doc
 doc/Documentation/*.aux
 doc/Documentation/doc.*
 !doc/Documentation/*.tex
+!doc/Documentation/doc.pdf
