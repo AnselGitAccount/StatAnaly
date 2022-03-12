@@ -45,7 +45,7 @@ TEST(Adjacency_Matrix, move) {
     std::string graphStr {"AB1,BC1,AD1,BD1,DC1"}; 
 
     auto Adjmat = convert2Adjmat<int>(graphStr);
-    auto Adjmat_move = std::move(Adjmat);
+    auto Adjmat_move = std::move(Adjmat);   // Move assigment method is called.
 
     EXPECT_EQ( convert2Adjmat<int>(graphStr), Adjmat_move );
     EXPECT_EQ( 4, Adjmat_move.len() );

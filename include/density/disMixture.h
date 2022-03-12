@@ -59,16 +59,15 @@ public:
     };
     
     /** Move constructor.
-     * Move the named distribution.
      */
     disMixture(disMixture&& o) {
-        ctr = std::move(o.ctr);
+        std::swap(ctr, o.ctr);
     }
 
     /** Move assignment */
     disMixture& operator = (disMixture&& o) {
         // Move the named distribution.
-        ctr = std::move(o.ctr);
+        std::swap(ctr, o.ctr);
         return *this;
     }
 

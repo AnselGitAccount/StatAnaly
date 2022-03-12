@@ -78,14 +78,12 @@ public:
     
     /** Move constructor */
     dCtr(dCtr&& o) {
-        // Move the named distribution.
-        ingreds = std::move(o.ingreds);
+        std::swap(ingreds, o.ingreds);
     }
 
     /** Move assignment */
     dCtr& operator = (dCtr&& o) {
-        // Move the named distribution.
-        ingreds = std::move(o.ingreds);
+        std::swap(ingreds, o.ingreds);
         return *this;
     }
 
